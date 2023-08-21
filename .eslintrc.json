@@ -5,8 +5,8 @@
   "extends": [
     "airbnb-base",
     "airbnb-typescript/base",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    "plugin:@typescript-eslint/strict-type-checked",
+    "plugin:@typescript-eslint/stylistic-type-checked"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -24,7 +24,24 @@
   ],
   "rules": {
     "@typescript-eslint/no-unused-vars": "warn",
+    "class-methods-use-this": "off",
     "no-console": "off",
-    "import/prefer-default-export": "off"
+    "no-restricted-syntax": [
+      "error",
+      "ForInStatement",
+      "LabeledStatement",
+      "WithStatement"
+    ],
+    "import/prefer-default-export": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages"
+    ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true
+      }
+    ]
   }
 }

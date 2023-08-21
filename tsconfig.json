@@ -12,17 +12,15 @@
     "moduleResolution": "Node16",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": [
+      "~/*": [
         "src/*"
       ],
     },
     "strict": true,
   },
-  "include": [
-    "src/**/*.ts",
-  ],
   "exclude": [
     "node_modules",
     "lib"
