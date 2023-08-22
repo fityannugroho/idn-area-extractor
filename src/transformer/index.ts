@@ -1,4 +1,4 @@
-export interface Transformer<T> {
+export interface Transformer<T = unknown> {
   /**
    * Get the regex to transform.
    */
