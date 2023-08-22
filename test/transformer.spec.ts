@@ -1,10 +1,13 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
-import { transformData, transformDistricts, transformRegencies } from '~/transformer.js';
+import {
+  transformData, transformDistricts, transformIslands, transformRegencies,
+} from '~/transformer.js';
 import { Matcher } from '~/matcher/index.js';
 import RegencyMatcher from '~/matcher/RegencyMatcher.js';
 import DistrictMatcher from '~/matcher/DistrictMatcher.js';
+import IslandMatcher from '~/matcher/IslandMatcher.js';
 
 interface ValidationOptions {
   tag: string,
@@ -17,7 +20,7 @@ interface TransformDataOptions<T> extends ValidationOptions {
 }
 
 interface TransformerOptions<T> extends ValidationOptions {
-  expected: T[],
+  expected: Required<T>[],
   filePath: string,
   transformer: (dataRows: string[]) => T[],
 }
@@ -68,6 +71,15 @@ validateTransformData({
   expected: { code: '110104', regencyCode: '1101', name: 'LABUHANHAJI' },
 });
 
+validateTransformData({
+  tag: 'island',
+  matcher: new IslandMatcher(),
+  data: '21.71.40322 Pulau Putri 01°12\'15.00" U 104°04\'41.00" T TBP(PPKT)',
+  expected: {
+    code: '217140322', regencyCode: '2171', coordinate: '01°12\'15.00" N 104°04\'41.00" E', isPopulated: false, isOutermostSmall: true, name: 'Pulau Putri',
+  },
+});
+
 validateTransformer({
   tag: 'regencies',
   transformer: transformRegencies,
@@ -88,5 +100,25 @@ validateTransformer({
     { code: '110102', regencyCode: '1101', name: 'KLUET UTARA' },
     { code: '110103', regencyCode: '1101', name: 'KLUET SELATAN' },
     { code: '110104', regencyCode: '1101', name: 'LABUHANHAJI' },
+  ],
+});
+
+validateTransformer({
+  tag: 'islands',
+  transformer: transformIslands,
+  filePath: path.resolve(__dirname, 'data/islands.txt'),
+  expected: [
+    {
+      code: '130040001', regencyCode: '', coordinate: '00°45\'38.07" S 099°59\'47.69" E', isPopulated: false, isOutermostSmall: false, name: 'Pulau Bando',
+    },
+    {
+      code: '217140308', regencyCode: '2171', coordinate: '00°47\'18.61" N 104°09\'01.32" E', isPopulated: false, isOutermostSmall: false, name: 'Pulau Petang',
+    },
+    {
+      code: '217140309', regencyCode: '2171', coordinate: '00°37\'37.99" N 104°05\'28.00" E', isPopulated: true, isOutermostSmall: false, name: 'Pulau Petong',
+    },
+    {
+      code: '217140320', regencyCode: '2171', coordinate: '01°04\'42.60" N 103°52\'24.10" E', isPopulated: false, isOutermostSmall: false, name: 'Pulau Punai',
+    },
   ],
 });

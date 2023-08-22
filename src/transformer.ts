@@ -1,7 +1,8 @@
-import { DistrictTransformed, RegencyTransformed } from 'idn-area-data';
+import { DistrictTransformed, IslandTransformed, RegencyTransformed } from 'idn-area-data';
 import { Matcher } from './matcher/index.js';
 import RegencyMatcher from './matcher/RegencyMatcher.js';
 import DistrictMatcher from './matcher/DistrictMatcher.js';
+import IslandMatcher from './matcher/IslandMatcher.js';
 
 export function transformData<T>(
   data: string,
@@ -42,4 +43,9 @@ export function transformRegencies(dataRows: string[]): RegencyTransformed[] {
 export function transformDistricts(dataRows: string[]): DistrictTransformed[] {
   return dataRows.map((row) => transformData(row, new DistrictMatcher()))
     .filter((district): district is DistrictTransformed => district !== null);
+}
+
+export function transformIslands(dataRows: string[]): IslandTransformed[] {
+  return dataRows.map((row) => transformData(row, new IslandMatcher()))
+    .filter((island): island is IslandTransformed => island !== null);
 }
