@@ -1,3 +1,5 @@
+// Below are examples of district data extracted from a source file in PDF format
+
 11.01.01 Bakongan 12
 11.01.02 Kluet Utara 212
 11.01.03 Kluet Selatan 173

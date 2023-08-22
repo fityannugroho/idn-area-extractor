@@ -17,19 +17,22 @@ interface TransformerOptions<T> {
 function validateTransformer<T>({
   data, expected, tag, transformer,
 }: TransformerOptions<T>) {
-  describe(`transform many: ${tag}`, () => {
-    it('should return the transformed data', () => {
-      const regencies = transformer.transformMany(data);
-
-      expect(regencies).toStrictEqual(expected);
+  describe(`transform() ${tag}`, () => {
+    it('should return null if the data does not match', () => {
+      const receivedData = transformer.transform('lorem ipsum');
+      expect(receivedData).toBeNull();
     });
   });
 
-  describe(`transform one: ${tag}`, () => {
-    it('should return the transformed data', () => {
-      const regency = transformer.transform(data[0]);
+  describe(`transformMany() ${tag}`, () => {
+    it('should return an empty array if the data does not match', () => {
+      const receivedData = transformer.transformMany(['lorem ipsum', 'dolor sit amet']);
+      expect(receivedData).toHaveLength(0);
+    });
 
-      expect(regency).toStrictEqual(expected[0]);
+    it('should return the array of transformed data', () => {
+      const results = transformer.transformMany(data);
+      expect(results).toStrictEqual(expected);
     });
   });
 }

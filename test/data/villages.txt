@@ -1,3 +1,5 @@
+// Below are examples of village data extracted from a source file in PDF format
+
 11.01.01.2001 1 Keude Bakongan
 11.01.01.2002 2 Ujong Mangki Perbaikan nama sesuai Surat Pemkab Aceh Selatan No.140/819/2016
 tgl 14 okt 2016 dan Rekomedasi Ditjen Bina Pemdes No. 146/3672/BPD
