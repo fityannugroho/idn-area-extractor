@@ -13,12 +13,29 @@ describe('Extractor', () => {
     );
   });
 
-  test('extractRowsFromTextFile', () => {
-    const rows = extractTxtFileRows(path.resolve(__dirname, 'data/regencies.txt'));
+  describe('extractTxtFileRows', () => {
+    test('default', () => {
+      const rows = extractTxtFileRows(path.resolve(__dirname, 'data/test.txt'));
 
-    expect(rows).toHaveLength(10);
-    expect(rows).toEqual(
-      expect.arrayContaining([expect.any(String)]),
-    );
+      expect(rows).toHaveLength(12);
+      expect(rows).toEqual(
+        expect.arrayContaining([expect.any(String)]),
+      );
+    });
+
+    test('with trim option', () => {
+      const rows = extractTxtFileRows(path.resolve(__dirname, 'data/test.txt'), { trim: true });
+
+      expect(rows[0]).toStrictEqual('1');
+    });
+
+    test('with removeEmpty option', () => {
+      const rows = extractTxtFileRows(path.resolve(__dirname, 'data/test.txt'), { removeEmpty: true });
+
+      expect(rows).toHaveLength(8);
+      expect(rows).toEqual(
+        expect.arrayContaining([expect.any(String)]),
+      );
+    });
   });
 });
