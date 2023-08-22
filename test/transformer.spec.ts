@@ -1,13 +1,14 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
-import {
-  transformData, transformDistricts, transformIslands, transformRegencies,
-} from '~/transformer.js';
-import { Matcher } from '~/matcher/index.js';
-import RegencyMatcher from '~/matcher/RegencyMatcher.js';
 import DistrictMatcher from '~/matcher/DistrictMatcher.js';
 import IslandMatcher from '~/matcher/IslandMatcher.js';
+import RegencyMatcher from '~/matcher/RegencyMatcher.js';
+import VillageMatcher from '~/matcher/VillageMatcher.js';
+import { Matcher } from '~/matcher/index.js';
+import {
+  transformData, transformDistricts, transformIslands, transformRegencies, transformVillages,
+} from '~/transformer.js';
 
 interface ValidationOptions {
   tag: string,
@@ -80,6 +81,13 @@ validateTransformData({
   },
 });
 
+validateTransformData({
+  tag: 'village',
+  matcher: new VillageMatcher(),
+  data: '11.01.01.2002 2 Ujong Mangki Perbaikan nama sesuai Surat Pemkab Aceh Selatan No.140/819/2016',
+  expected: { code: '1101012002', districtCode: '110101', name: 'UJONG MANGKI' },
+});
+
 validateTransformer({
   tag: 'regencies',
   transformer: transformRegencies,
@@ -120,5 +128,20 @@ validateTransformer({
     {
       code: '217140320', regencyCode: '2171', coordinate: '01°04\'42.60" N 103°52\'24.10" E', isPopulated: false, isOutermostSmall: false, name: 'Pulau Punai',
     },
+  ],
+});
+
+validateTransformer({
+  tag: 'villages',
+  transformer: transformVillages,
+  filePath: path.resolve(__dirname, 'data/villages.txt'),
+  expected: [
+    { code: '1101012001', districtCode: '110101', name: 'KEUDE BAKONGAN' },
+    { code: '1101012002', districtCode: '110101', name: 'UJONG MANGKI' },
+    { code: '1101012015', districtCode: '110101', name: 'DARUL IKHSAN' },
+    { code: '1111052003', districtCode: '111105', name: 'MATANG GLUMPANG DUA MNS. TIMU (X)' },
+    { code: '1114022010', districtCode: '111402', name: 'DATAR LUAS' },
+    { code: '1219112003', districtCode: '121911', name: 'PERKEBUNAN TANAH DATAR' },
+    { code: '1307042001', districtCode: '130704', name: 'TJ. HARO SIKABU-KABU PD. PANJANG' },
   ],
 });

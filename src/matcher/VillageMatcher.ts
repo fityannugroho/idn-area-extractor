@@ -5,14 +5,14 @@ import getDividerWords from '~/divider-words.js';
 export default class VillageMatcher implements Matcher<VillageTransformed> {
   /**
    *
-   * The regex was tested in https://regex101.com/r/yySCn0/8
+   * The regex was tested in https://regex101.com/r/yySCn0/9
    * @inheritdoc
    */
   getRegex(): RegExp {
     const dws = getDividerWords({ withTypos: true }).join('|');
 
     return new RegExp(
-      `^(\\d{2}\\.\\d{2}\\.\\d{2}\\.\\d{4})\\s*\\d*\\s*(.+?)(?=$|\\s(?:${dws}))`,
+      `^(\\d{2}\\.\\d{2}\\.\\d{2}\\.\\d{4})\\s*\\d*\\s*(.+?)(?=$|\\s(?:${dws})\\b)`,
       'i',
     );
   }
