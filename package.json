@@ -60,6 +60,7 @@
   "dependencies": {
     "idn-area-data": "^2.2.0",
     "meow": "^12.1.0",
+    "multi-integer-range": "^5.2.0",
     "papaparse": "^5.4.1",
     "pdfjs-dist": "^3.9.179"
   }

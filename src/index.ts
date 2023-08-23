@@ -37,33 +37,44 @@ export interface ExtractorOptions {
    * The path to the PDF file.
    */
   filePath: string
+
+  /**
+   * The specific PDF page range to be extracted.
+   *
+   * @example `1-2,5,7-9`.
+   */
+  range?: string
 }
 
 function validateOptions(options: ExtractorOptions) {
   const {
-    data, destination, filePath, output,
+    data, destination, filePath, output, range,
   } = options;
 
   if (!dataEntities.includes(data.toLowerCase())) {
-    throw new Error(`'data' must be one of: ${dataEntities.join(', ')}.`);
+    throw new Error(`'data' must be one of: ${dataEntities.join(', ')}`);
   }
 
   if (!filePath) {
-    throw new Error("'filePath' is required.");
+    throw new Error("'filePath' is required");
   }
 
   if (!existsSync(filePath) || !lstatSync(filePath).isFile() || !filePath.match(/\.pdf$/)) {
-    throw new Error("'filePath' must be a PDF path.");
+    throw new Error("'filePath' must be a PDF path");
   }
 
   if (destination) {
     if (!existsSync(destination) || !lstatSync(destination).isDirectory()) {
-      throw new Error("'destination' must be a directory path.");
+      throw new Error("'destination' must be a directory path");
     }
   }
 
   if (output && !output.match(/^[A-Za-z0-9_\- ]+$/)) {
-    throw new Error("'output' contains forbidden character(s).");
+    throw new Error("'output' contains forbidden character(s)");
+  }
+
+  if (range && !range.match(/^(?:\d-?,?)+\b$/)) {
+    throw new Error("'range' format is invalid");
   }
 
   return options;
@@ -71,10 +82,15 @@ function validateOptions(options: ExtractorOptions) {
 
 export default async function idnxtr(options: ExtractorOptions) {
   const {
-    data, destination = process.cwd(), filePath, output,
+    data, destination = process.cwd(), filePath, output, range,
   } = validateOptions(options);
 
-  const { pageContents } = await extractFromPdf(filePath);
+  const {
+    pageContents, numPages, pagesExtracted, pageRange,
+  } = await extractFromPdf(filePath, range);
+
+  console.log(`${pagesExtracted} out of ${numPages} pages extracted successfully: ${pageRange}`);
+
   const rows = extractRows(pageContents.join('\n'), { trim: true, removeEmpty: true });
   const unparseOptions: Papa.UnparseConfig = {
     escapeChar: '\\',
