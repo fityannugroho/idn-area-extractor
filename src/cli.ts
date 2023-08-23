@@ -9,7 +9,7 @@ const cli = meow(`
   Options
     --destination, -d     Set the folder destination. The default is the current directory.
     --output, -o          Set a specific output file name without a file extension.
-    --range, -r           Set the specific PDF page range to be extracted. (e.g. 1-2,5,7-9)
+    --range, -r           Set the specific PDF page range to be extracted (example: 1-2,5,7-9).
 `, {
   importMeta: import.meta,
   description: 'Extract Indonesia area data from PDF',
@@ -43,8 +43,8 @@ idnxtr({
   filePath,
   ...flags,
 }).then(() => {
-  console.log('Done!');
+  console.log('\nDone!');
 }).catch((err: Error) => {
-  console.error(`Error: ${err.message}`);
+  console.error(`${err.name}: ${err.message}`);
   process.exit(1);
 });

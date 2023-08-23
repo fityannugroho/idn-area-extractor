@@ -1,5 +1,6 @@
 import { existsSync, lstatSync, writeFileSync } from 'fs';
 import Papa from 'papaparse';
+import ora from 'ora';
 import { extractFromPdf, extractRows } from './extractor.js';
 import DistrictTransformer from './transformer/DistrictTransformer.js';
 import IslandTransformer from './transformer/IslandTransformer.js';
@@ -52,7 +53,7 @@ function validateOptions(options: ExtractorOptions) {
   } = options;
 
   if (!dataEntities.includes(data.toLowerCase())) {
-    throw new Error(`'data' must be one of: ${dataEntities.join(', ')}`);
+    throw new Error(`'data' must be one of ${dataEntities.join(', ')}`);
   }
 
   if (!filePath) {
@@ -81,17 +82,18 @@ function validateOptions(options: ExtractorOptions) {
 }
 
 export default async function idnxtr(options: ExtractorOptions) {
+  const spinner = ora();
   const {
     data, destination = process.cwd(), filePath, output, range,
   } = validateOptions(options);
 
-  const {
-    pageContents, numPages, pagesExtracted, pageRange,
-  } = await extractFromPdf(filePath, range);
+  spinner.start('Extracting data');
 
-  console.log(`${pagesExtracted} out of ${numPages} pages extracted successfully: ${pageRange}`);
-
+  const { pageContents, numPages, pagesExtracted } = await extractFromPdf(filePath, range);
   const rows = extractRows(pageContents.join('\n'), { trim: true, removeEmpty: true });
+
+  spinner.succeed(`${pagesExtracted}/${numPages} pages extracted (${rows.length} rows)`);
+
   const unparseOptions: Papa.UnparseConfig = {
     escapeChar: '\\',
   };
@@ -112,7 +114,11 @@ export default async function idnxtr(options: ExtractorOptions) {
       break;
   }
 
+  spinner.start('Transforming data');
+
   const results = transformer.transformMany(rows);
   const fileName = output ?? `list-of-${data}`;
   writeFileSync(`${destination}/${fileName}.csv`, Papa.unparse(results, unparseOptions));
+
+  spinner.succeed(`${results.length} data transformed`);
 }
