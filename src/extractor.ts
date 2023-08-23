@@ -18,7 +18,7 @@ export async function extractFromPdf(filePath: string, range?: string) {
 
   for (const [start, end] of pageRange) {
     if (start < 1 || end > numPages) {
-      throw new Error(`Page range must be within 1-${numPages}`);
+      throw new Error('Page range exceeds the expected range');
     }
 
     for (let i = start; i <= end; i += 1) {
