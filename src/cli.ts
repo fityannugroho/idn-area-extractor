@@ -7,7 +7,6 @@ const cli = meow(`
     $ idnxtr [regency|district|island|village] </path/to/pdf>
 
   Options
-    --compare, -c         Compare the extracted data with old data (from idn-area-data).
     --destination, -d     Set the folder destination. The default is the current directory.
     --output, -o          Set a specific output file name without a file extension.
     --range, -r           Set the specific PDF page range to be extracted. (e.g. 1-2,5,7-9)
