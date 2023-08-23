@@ -39,12 +39,11 @@ export interface ExtractorOptions {
   filePath: string
 }
 
-export default async function idnxtr({
-  data,
-  destination = process.cwd(),
-  filePath,
-  output,
-}: ExtractorOptions) {
+function validateOptions(options: ExtractorOptions) {
+  const {
+    data, destination, filePath, output,
+  } = options;
+
   if (!dataEntities.includes(data.toLowerCase())) {
     throw new Error(`'data' must be one of: ${dataEntities.join(', ')}.`);
   }
@@ -53,13 +52,27 @@ export default async function idnxtr({
     throw new Error("'filePath' is required.");
   }
 
-  if (!existsSync(destination) || !lstatSync(destination).isDirectory()) {
-    throw new Error("'destination' must be a valid directory path.");
+  if (!existsSync(filePath) || !lstatSync(filePath).isFile() || !filePath.match(/\.pdf$/)) {
+    throw new Error("'filePath' must be a PDF path.");
+  }
+
+  if (destination) {
+    if (!existsSync(destination) || !lstatSync(destination).isDirectory()) {
+      throw new Error("'destination' must be a directory path.");
+    }
   }
 
   if (output && !output.match(/^[A-Za-z0-9_\- ]+$/)) {
     throw new Error("'output' contains forbidden character(s).");
   }
+
+  return options;
+}
+
+export default async function idnxtr(options: ExtractorOptions) {
+  const {
+    data, destination = process.cwd(), filePath, output,
+  } = validateOptions(options);
 
   const { pageContents } = await extractFromPdf(filePath);
   const rows = extractRows(pageContents.join('\n'), { trim: true, removeEmpty: true });
