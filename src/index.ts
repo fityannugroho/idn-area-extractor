@@ -57,8 +57,8 @@ export default async function idnxtr({
     throw new Error("'destination' must be a valid directory path.");
   }
 
-  if (output && !output.match(/^[A-Za-z0-9_-]$/)) {
-    throw new Error("'outputName' contains forbidden character(s).");
+  if (output && !output.match(/^[A-Za-z0-9_\- ]+$/)) {
+    throw new Error("'output' contains forbidden character(s).");
   }
 
   const { pageContents } = await extractFromPdf(filePath);
