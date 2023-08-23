@@ -11,6 +11,7 @@ const cli = meow(`
     --output, -o          Set a specific output file name without a file extension.
     --range, -r           Set the specific PDF page range to be extracted (example: 1-2,5,7-9).
     --save-raw, -R        If 'true', save the extracted raw data into .txt file
+    --silent              Disable all logs
 `, {
   importMeta: import.meta,
   description: 'Extract Indonesia area data from PDF',
@@ -31,6 +32,9 @@ const cli = meow(`
       shortFlag: 'R',
       type: 'boolean',
     },
+    silent: {
+      type: 'boolean',
+    },
   },
 });
 
@@ -39,6 +43,7 @@ interface Flags {
   output?: string
   range?: string
   saveRaw?: boolean
+  silent?: boolean
 }
 
 const [data, filePath] = cli.input;
@@ -49,7 +54,9 @@ idnxtr({
   filePath,
   ...flags,
 }).then(() => {
-  console.log('\nDone!');
+  if (!flags.silent) {
+    console.log('\nDone!');
+  }
 }).catch((err: Error) => {
   console.error(`${err.name}: ${err.message}`);
   process.exit(1);

@@ -50,6 +50,11 @@ export interface ExtractorOptions {
    * Save the extracted raw data into .txt file.
    */
   saveRaw?: boolean
+
+  /**
+   * Disable all logs.
+   */
+  silent?: boolean
 }
 
 function validateOptions(options: ExtractorOptions) {
@@ -91,11 +96,11 @@ function validateOptions(options: ExtractorOptions) {
 }
 
 export default async function idnxtr(options: ExtractorOptions) {
-  const spinner = ora();
   const {
-    data, destination = process.cwd(), filePath, output, range, saveRaw,
+    data, destination = process.cwd(), filePath, output, range, saveRaw, silent,
   } = validateOptions(options);
 
+  const spinner = ora({ isSilent: silent });
   spinner.start('Extracting data');
 
   const { pageContents, numPages, pagesExtracted } = await extractFromPdf(filePath, range);
