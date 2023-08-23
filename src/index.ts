@@ -45,11 +45,16 @@ export interface ExtractorOptions {
    * @example `1-2,5,7-9`.
    */
   range?: string
+
+  /**
+   * Save the extracted raw data into .txt file.
+   */
+  saveRaw?: boolean
 }
 
 function validateOptions(options: ExtractorOptions) {
   const {
-    data, destination, filePath, output, range,
+    data, destination, filePath, output, range, saveRaw,
   } = options;
 
   if (!dataEntities.includes(data.toLowerCase())) {
@@ -78,19 +83,26 @@ function validateOptions(options: ExtractorOptions) {
     throw new Error("'range' format is invalid");
   }
 
+  if (saveRaw && typeof saveRaw !== 'boolean') {
+    throw new Error("'saveRaw' must be a boolean");
+  }
+
   return options;
 }
 
 export default async function idnxtr(options: ExtractorOptions) {
   const spinner = ora();
   const {
-    data, destination = process.cwd(), filePath, output, range,
+    data, destination = process.cwd(), filePath, output, range, saveRaw,
   } = validateOptions(options);
 
   spinner.start('Extracting data');
 
   const { pageContents, numPages, pagesExtracted } = await extractFromPdf(filePath, range);
   const rows = extractRows(pageContents.join('\n'), { trim: true, removeEmpty: true });
+  if (saveRaw) {
+    writeFileSync(`${destination}/raw-${output ?? data}.txt`, pageContents.join('\n'));
+  }
 
   spinner.succeed(`${pagesExtracted}/${numPages} pages extracted (${rows.length} rows)`);
 
