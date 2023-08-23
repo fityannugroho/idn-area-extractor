@@ -4,7 +4,7 @@ import idnxtr, { DataEntity } from './index.js';
 
 const cli = meow(`
   Usage
-    $ idnxtr [regency|district|island|village] </path/to/pdf>
+    $ idnxtr [regencies|districts|islands|villages] </path/to/pdf>
 
   Options
     --destination, -d     Set the folder destination. The default is the current directory.

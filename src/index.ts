@@ -8,8 +8,8 @@ import RegencyTransformer from './transformer/RegencyTransformer.js';
 import VillageTransformer from './transformer/VillageTransformer.js';
 import { Transformer } from './transformer/index.js';
 
-export type DataEntity = 'regency' | 'district' | 'island' | 'village';
-export const dataEntities = ['regency', 'district', 'island', 'village'];
+export type DataEntity = 'regencies' | 'districts' | 'islands' | 'villages';
+export const dataEntities = ['regencies', 'districts', 'islands', 'villages'];
 
 export interface ExtractorOptions {
   /**
@@ -100,13 +100,13 @@ export default async function idnxtr(options: ExtractorOptions) {
 
   let transformer: Transformer;
   switch (data) {
-    case 'regency':
+    case 'regencies':
       transformer = new RegencyTransformer();
       break;
-    case 'district':
+    case 'districts':
       transformer = new DistrictTransformer();
       break;
-    case 'island':
+    case 'islands':
       transformer = new IslandTransformer();
       break;
     default:
@@ -117,8 +117,7 @@ export default async function idnxtr(options: ExtractorOptions) {
   spinner.start('Transforming data');
 
   const results = transformer.transformMany(rows);
-  const fileName = output ?? `list-of-${data}`;
-  writeFileSync(`${destination}/${fileName}.csv`, Papa.unparse(results, unparseOptions));
+  writeFileSync(`${destination}/${output ?? data}.csv`, Papa.unparse(results, unparseOptions));
 
   spinner.succeed(`${results.length} data transformed`);
 }
