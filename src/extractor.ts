@@ -21,10 +21,7 @@ export async function extractFromPdf(filePath: string) {
   };
 }
 
-/**
- * Extract rows in a text file (.txt or .csv).
- */
-export function extractTxtFileRows(filePath: string, options?: {
+interface ExtractRowsOptions {
   /**
    * Remove whitespaces at the beginning and the end of each row.
    */
@@ -33,8 +30,13 @@ export function extractTxtFileRows(filePath: string, options?: {
    * Remove empty rows.
    */
   removeEmpty?: boolean,
-}) {
-  let rows = readFileSync(filePath, { encoding: 'utf8' }).split('\n');
+}
+
+/**
+ * Extract rows from string data.
+ */
+export function extractRows(data: string, options?: ExtractRowsOptions) {
+  let rows = data.split('\n');
 
   if (options?.trim) {
     rows = rows.map((row) => row.trim());
@@ -45,4 +47,11 @@ export function extractTxtFileRows(filePath: string, options?: {
   }
 
   return rows;
+}
+
+/**
+ * Extract rows in a text file (.txt or .csv).
+ */
+export function extractTxtFileRows(filePath: string, options?: ExtractRowsOptions) {
+  return extractRows(readFileSync(filePath, { encoding: 'utf8' }), options);
 }
