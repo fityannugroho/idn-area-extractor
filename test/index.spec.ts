@@ -4,7 +4,7 @@ import {
   beforeAll, beforeEach, describe, expect, it,
 } from 'vitest';
 import { extractTxtFileRows } from '~/extractor.js';
-import idnxtr, { DataEntity, ExtractorOptions } from '~/index.js';
+import idnxtr, { DataEntity, ExtractorOptions, dataEntities } from '~/index.js';
 
 describe('idnxtr', () => {
   const distPath = path.resolve('dist');
@@ -19,14 +19,11 @@ describe('idnxtr', () => {
 
   describe('negative tests', () => {
     it('should throw error if data is invalid', async () => {
-      await expect(idnxtr({ data: '' as DataEntity, filePath }))
-        .rejects.toThrow("'data' is required");
+      const errMsg = `'data' must be one of ${dataEntities.join(', ')}`;
 
-      await expect(idnxtr({ data: ' ' as DataEntity, filePath }))
-        .rejects.toThrow("'data' is required");
-
-      await expect(idnxtr({ data: 'lorem' as DataEntity, filePath }))
-        .rejects.toThrow();
+      await expect(idnxtr({ data: '' as DataEntity, filePath })).rejects.toThrow(errMsg);
+      await expect(idnxtr({ data: ' ' as DataEntity, filePath })).rejects.toThrow(errMsg);
+      await expect(idnxtr({ data: 'lorem' as DataEntity, filePath })).rejects.toThrow(errMsg);
     });
 
     it('should throw error if filePath is empty or not a PDF path', async () => {
@@ -205,6 +202,14 @@ describe('idnxtr', () => {
       });
 
       expect(fs.existsSync(`${distPath}/raw-regencies.txt`)).toBeTruthy();
+    });
+
+    it('should create a new CSV file with custom output name', async () => {
+      await idnxtr({
+        data: 'regencies', filePath, output: 'custom', ...flags,
+      });
+
+      expect(fs.existsSync(`${distPath}/custom.csv`)).toBeTruthy();
     });
   });
 });

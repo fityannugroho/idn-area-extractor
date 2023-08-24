@@ -66,11 +66,7 @@ function validateOptions(options: ExtractorOptions): ExtractorOptions {
     data, destination, filePath, output, range, saveRaw, silent,
   } = options;
 
-  if (!data.trim()) {
-    throw new ValidationError("'data' is required");
-  }
-
-  if (!dataEntities.includes(data.toLowerCase())) {
+  if (!dataEntities.includes(data)) {
     throw new ValidationError(`'data' must be one of ${dataEntities.join(', ')}`);
   }
 
