@@ -1,6 +1,7 @@
 import { existsSync, lstatSync, writeFileSync } from 'fs';
-import Papa from 'papaparse';
 import ora from 'ora';
+import Papa from 'papaparse';
+import ValidationError from './errors/ValidationError.js';
 import { extractFromPdf, extractRows } from './extractor.js';
 import DistrictTransformer from './transformer/DistrictTransformer.js';
 import IslandTransformer from './transformer/IslandTransformer.js';
@@ -57,42 +58,68 @@ export interface ExtractorOptions {
   silent?: boolean
 }
 
-function validateOptions(options: ExtractorOptions) {
+/**
+ * @throws {ValidationError} If there are any invalid options.
+ */
+function validateOptions(options: ExtractorOptions): ExtractorOptions {
   const {
-    data, destination, filePath, output, range, saveRaw,
+    data, destination, filePath, output, range, saveRaw, silent,
   } = options;
 
-  if (!dataEntities.includes(data.toLowerCase())) {
-    throw new Error(`'data' must be one of ${dataEntities.join(', ')}`);
+  if (!data.trim()) {
+    throw new ValidationError("'data' is required");
   }
 
-  if (!filePath) {
-    throw new Error("'filePath' is required");
+  if (!dataEntities.includes(data.toLowerCase())) {
+    throw new ValidationError(`'data' must be one of ${dataEntities.join(', ')}`);
+  }
+
+  if (!filePath.trim()) {
+    throw new ValidationError("'filePath' is required");
   }
 
   if (!existsSync(filePath) || !lstatSync(filePath).isFile() || !filePath.match(/\.pdf$/)) {
-    throw new Error("'filePath' must be a PDF path");
+    throw new ValidationError("'filePath' must be a PDF path");
   }
 
-  if (destination) {
+  if (typeof destination !== 'undefined') {
+    if (!destination.trim()) {
+      throw new ValidationError("'destination' must not be empty");
+    }
+
     if (!existsSync(destination) || !lstatSync(destination).isDirectory()) {
-      throw new Error("'destination' must be a directory path");
+      throw new ValidationError("'destination' must be a directory path");
     }
   }
 
-  if (output && !output.match(/^[A-Za-z0-9_\- ]+$/)) {
-    throw new Error("'output' contains forbidden character(s)");
+  if (typeof output !== 'undefined') {
+    if (output.trim() === '') {
+      throw new ValidationError("'output' must not be empty");
+    }
+
+    if (!output.match(/^[A-Za-z0-9_\- ]+$/)) {
+      throw new ValidationError("'output' contains forbidden character(s)");
+    }
   }
 
-  if (range && !range.match(/^(?:\d-?,?)+\b$/)) {
-    throw new Error("'range' format is invalid");
+  if (typeof range !== 'undefined') {
+    if (!range.match(/^(?:\d-?,?)+\b$/)) {
+      throw new ValidationError("'range' format is invalid");
+    }
   }
 
   if (saveRaw && typeof saveRaw !== 'boolean') {
-    throw new Error("'saveRaw' must be a boolean");
+    throw new ValidationError("'saveRaw' must be a boolean");
   }
 
-  return options;
+  if (silent && typeof silent !== 'boolean') {
+    throw new ValidationError("'silent' must be a boolean");
+  }
+
+  return {
+    ...options,
+    output: output?.trim(),
+  };
 }
 
 export default async function idnxtr(options: ExtractorOptions) {
