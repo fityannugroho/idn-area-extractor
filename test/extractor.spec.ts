@@ -35,11 +35,20 @@ describe('extractFromPdf', () => {
   });
 
   test('with invalid range', async () => {
-    await expect(extractFromPdf(filePath, '3')).rejects.toThrow('Page range exceeds the expected range');
-    await expect(extractFromPdf(filePath, '0-1')).rejects.toThrow('Page range exceeds the expected range');
-    await expect(extractFromPdf(filePath, '1-')).rejects.toThrow('Unexpected unbouded range notation');
-    await expect(extractFromPdf(filePath, '-1')).rejects.toThrow('Unexpected unbouded range notation');
-    await expect(extractFromPdf(filePath, 'abc')).rejects.toThrow('Invalid input');
+    await expect(extractFromPdf(filePath, '3'))
+      .rejects.toThrow('Page range exceeds the expected range');
+
+    await expect(extractFromPdf(filePath, '0-1'))
+      .rejects.toThrow('Page range exceeds the expected range');
+
+    await expect(extractFromPdf(filePath, '1-'))
+      .rejects.toThrow('Unexpected unbouded range notation');
+
+    await expect(extractFromPdf(filePath, '-1'))
+      .rejects.toThrow('Unexpected unbouded range notation');
+
+    await expect(extractFromPdf(filePath, 'abc'))
+      .rejects.toThrow('Invalid input');
   });
 });
 

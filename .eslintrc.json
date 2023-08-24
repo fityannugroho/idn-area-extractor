@@ -25,7 +25,15 @@
   "rules": {
     "@typescript-eslint/no-unused-vars": "warn",
     "class-methods-use-this": "off",
+    "max-len": [
+      "error",
+      {
+        "code": 100,
+        "ignoreRegExpLiterals": true
+      }
+    ],
     "no-console": "off",
+    "no-extra-parens": "error",
     "no-restricted-syntax": [
       "error",
       "ForInStatement",
