@@ -113,6 +113,7 @@ export default async function idnxtr(options: ExtractorOptions) {
 
   const unparseOptions: Papa.UnparseConfig = {
     escapeChar: '\\',
+    newline: '\n',
   };
 
   let transformer: Transformer;
@@ -134,7 +135,10 @@ export default async function idnxtr(options: ExtractorOptions) {
   spinner.start('Transforming data');
 
   const results = transformer.transformMany(rows);
-  writeFileSync(`${destination}/${output ?? data}.csv`, Papa.unparse(results, unparseOptions));
+  writeFileSync(
+    `${destination}/${output ?? data}.csv`,
+    Papa.unparse(transformer.transformForCsv(results), unparseOptions),
+  );
 
   spinner.succeed(`${results.length} data transformed`);
 }

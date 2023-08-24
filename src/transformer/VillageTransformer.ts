@@ -1,8 +1,8 @@
-import { VillageTransformed } from 'idn-area-data';
+import { VillageTransformed as Village, Village as VillageCsv } from 'idn-area-data';
 import getDividerWords from '~/divider-words.js';
 import { Transformer } from './index.js';
 
-export default class VillageTransformer implements Transformer<VillageTransformed> {
+export default class VillageTransformer implements Transformer<Village, VillageCsv> {
   /**
    *
    * The regex was tested in https://regex101.com/r/yySCn0/9
@@ -40,7 +40,7 @@ export default class VillageTransformer implements Transformer<VillageTransforme
     return mergedRows;
   }
 
-  transform(data: string): VillageTransformed | null {
+  transform(data: string): Village | null {
     const match = data.match(this.getRegex());
 
     if (!match?.length) {
@@ -57,9 +57,17 @@ export default class VillageTransformer implements Transformer<VillageTransforme
     };
   }
 
-  transformMany(data: string[]): VillageTransformed[] {
+  transformMany(data: string[]): Village[] {
     return this.prepareData(data)
       .map((row) => this.transform(row))
-      .filter((res): res is VillageTransformed => res !== null);
+      .filter((res): res is Village => res !== null);
+  }
+
+  transformForCsv(data: Village[]): VillageCsv[] {
+    return data.map((village) => ({
+      code: village.code,
+      district_code: village.districtCode,
+      name: village.name,
+    }));
   }
 }

@@ -1,4 +1,4 @@
-export interface Transformer<T = unknown> {
+export interface Transformer<T = unknown, U = unknown> {
   /**
    * Get the regex to transform.
    */
@@ -22,4 +22,13 @@ export interface Transformer<T = unknown> {
    * @returns The list of transformed data.
    */
   transformMany(data: string[]): T[]
+
+  /**
+   * Transform the data for CSV.
+   *
+   * Note: the order of the attributes is important.
+   *
+   * @param data The list of transformed data.
+   */
+  transformForCsv(data: T[]): U[]
 }

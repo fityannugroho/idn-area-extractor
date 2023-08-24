@@ -1,8 +1,8 @@
-import { DistrictTransformed } from 'idn-area-data';
+import { DistrictTransformed as District, District as DistrictCsv } from 'idn-area-data';
 import getDividerWords from '~/divider-words.js';
 import { Transformer } from './index.js';
 
-export default class DistrictTransformer implements Transformer<DistrictTransformed> {
+export default class DistrictTransformer implements Transformer<District, DistrictCsv> {
   /**
    *
    * The regex was tested in https://regex101.com/r/QDaT7Z
@@ -20,7 +20,7 @@ export default class DistrictTransformer implements Transformer<DistrictTransfor
     );
   }
 
-  transform(data: string): DistrictTransformed | null {
+  transform(data: string): District | null {
     const match = data.match(this.getRegex());
 
     if (!match?.length) {
@@ -36,9 +36,17 @@ export default class DistrictTransformer implements Transformer<DistrictTransfor
     };
   }
 
-  transformMany(data: string[]): DistrictTransformed[] {
+  transformMany(data: string[]): District[] {
     return data
       .map((row) => this.transform(row))
-      .filter((res): res is DistrictTransformed => res !== null);
+      .filter((res): res is District => res !== null);
+  }
+
+  transformForCsv(data: District[]): DistrictCsv[] {
+    return data.map((district) => ({
+      code: district.code,
+      regency_code: district.regencyCode,
+      name: district.name,
+    }));
   }
 }

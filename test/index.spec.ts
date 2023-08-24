@@ -3,6 +3,7 @@ import path from 'path';
 import {
   beforeAll, beforeEach, describe, expect, it,
 } from 'vitest';
+import { extractTxtFileRows } from '~/extractor.js';
 import idnxtr, { DataEntity, ExtractorOptions } from '~/index.js';
 
 describe('idnxtr', () => {
@@ -91,8 +92,8 @@ describe('idnxtr', () => {
       const resultPath = `${distPath}/regencies.csv`;
 
       expect(fs.existsSync(resultPath)).toBeTruthy();
-      // expect(extractTxtFileRows(resultPath).at(0))
-      //   .toStrictEqual('code,province_code,name');
+      expect(extractTxtFileRows(resultPath).at(0))
+        .toStrictEqual('code,province_code,name');
     });
 
     it('should create a new CSV file: districts.csv', async () => {
@@ -104,8 +105,8 @@ describe('idnxtr', () => {
       const resultPath = `${distPath}/districts.csv`;
 
       expect(fs.existsSync(resultPath)).toBeTruthy();
-      // expect(extractTxtFileRows(resultPath).at(0))
-      //   .toStrictEqual('code,regency_code,name');
+      expect(extractTxtFileRows(resultPath).at(0))
+        .toStrictEqual('code,regency_code,name');
     });
 
     it('should create a new CSV file: islands.csv', async () => {
@@ -117,8 +118,8 @@ describe('idnxtr', () => {
       const resultPath = `${distPath}/islands.csv`;
 
       expect(fs.existsSync(resultPath)).toBeTruthy();
-      // expect(extractTxtFileRows(resultPath).at(0))
-      //   .toStrictEqual('code,regency_code,coordinate,is_populated,is_outermost_small,name');
+      expect(extractTxtFileRows(resultPath).at(0))
+        .toStrictEqual('code,regency_code,coordinate,is_populated,is_outermost_small,name');
     });
 
     it('should create a new CSV file: villages.csv', async () => {
@@ -130,8 +131,8 @@ describe('idnxtr', () => {
       const resultPath = `${distPath}/villages.csv`;
 
       expect(fs.existsSync(resultPath)).toBeTruthy();
-      // expect(extractTxtFileRows(resultPath).at(0))
-      //   .toStrictEqual('code,district_code,name');
+      expect(extractTxtFileRows(resultPath).at(0))
+        .toStrictEqual('code,district_code,name');
     });
 
     it('should create a .txt file that contains raw data', async () => {

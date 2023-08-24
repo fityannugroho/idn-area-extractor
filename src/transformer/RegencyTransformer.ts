@@ -1,7 +1,7 @@
-import { RegencyTransformed } from 'idn-area-data';
+import { RegencyTransformed as Regency, Regency as RegencyCsv } from 'idn-area-data';
 import { Transformer } from './index.js';
 
-export default class RegencyTransformer implements Transformer<RegencyTransformed> {
+export default class RegencyTransformer implements Transformer<Regency, RegencyCsv> {
   /**
    *
    * The regex was tested in https://regex101.com/r/J63CVl
@@ -32,7 +32,7 @@ export default class RegencyTransformer implements Transformer<RegencyTransforme
     return mergedRows;
   }
 
-  transform(data: string): RegencyTransformed | null {
+  transform(data: string): Regency | null {
     const match = data.match(this.getRegex());
 
     if (!match?.length) {
@@ -48,9 +48,17 @@ export default class RegencyTransformer implements Transformer<RegencyTransforme
     };
   }
 
-  transformMany(data: string[]): RegencyTransformed[] {
+  transformMany(data: string[]): Regency[] {
     return this.prepareData(data)
       .map((row) => this.transform(row))
-      .filter((res): res is RegencyTransformed => res !== null);
+      .filter((res): res is Regency => res !== null);
+  }
+
+  transformForCsv(data: Regency[]): RegencyCsv[] {
+    return data.map((regency) => ({
+      code: regency.code,
+      province_code: regency.provinceCode,
+      name: regency.name,
+    }));
   }
 }
