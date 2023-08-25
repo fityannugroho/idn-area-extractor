@@ -40,7 +40,7 @@
   },
   "homepage": "https://github.com/fityannugroho/idn-area-extractor#readme",
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "devDependencies": {
     "@types/node": "^20.5.1",

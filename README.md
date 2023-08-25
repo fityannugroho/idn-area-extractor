@@ -21,8 +21,8 @@ This package was developed to ease and speed up the data processing stage of [id
 
 ## Prerequisite
 
-- Node.js 16 or later
-- npm
+- Node.js 18 or later
+- npm 9 or later
 
 ## Installation
 
