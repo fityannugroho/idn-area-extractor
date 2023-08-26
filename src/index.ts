@@ -1,3 +1,4 @@
+import { fileTypeFromFile } from 'file-type';
 import { existsSync, lstatSync, writeFileSync } from 'fs';
 import ora from 'ora';
 import Papa from 'papaparse';
@@ -61,7 +62,7 @@ export interface ExtractorOptions {
 /**
  * @throws {ValidationError} If there are any invalid options.
  */
-function validateOptions(options: ExtractorOptions): ExtractorOptions {
+async function validateOptions(options: ExtractorOptions): Promise<ExtractorOptions> {
   const {
     data, destination, filePath, output, range, saveRaw, silent,
   } = options;
@@ -74,7 +75,12 @@ function validateOptions(options: ExtractorOptions): ExtractorOptions {
     throw new ValidationError("'filePath' is required");
   }
 
-  if (!existsSync(filePath) || !lstatSync(filePath).isFile() || !filePath.match(/\.pdf$/)) {
+  if (!existsSync(filePath) || !lstatSync(filePath).isFile()) {
+    throw new ValidationError("'filePath' does not exists");
+  }
+
+  const fileType = await fileTypeFromFile(filePath);
+  if (!fileType || fileType.ext !== 'pdf' || fileType.mime !== 'application/pdf') {
     throw new ValidationError("'filePath' must be a PDF path");
   }
 
@@ -121,7 +127,7 @@ function validateOptions(options: ExtractorOptions): ExtractorOptions {
 export default async function idnxtr(options: ExtractorOptions) {
   const {
     data, destination = process.cwd(), filePath, output, range, saveRaw, silent,
-  } = validateOptions(options);
+  } = await validateOptions(options);
 
   const spinner = ora({ isSilent: silent });
   spinner.start('Extracting data');

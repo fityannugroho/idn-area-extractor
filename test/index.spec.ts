@@ -26,25 +26,34 @@ describe('idnxtr', () => {
       await expect(idnxtr({ data: 'lorem' as DataEntity, filePath })).rejects.toThrow(errMsg);
     });
 
-    it('should throw error if filePath is empty or not a PDF path', async () => {
+    it('should throw error if filePath is empty', async () => {
       await expect(idnxtr({ data: 'regencies', filePath: '' }))
         .rejects.toThrow("'filePath' is required");
 
       await expect(idnxtr({ data: 'regencies', filePath: ' ' }))
         .rejects.toThrow("'filePath' is required");
+    });
 
-      await expect(idnxtr({ data: 'regencies', filePath: ` ${filePath}` }))
-        .rejects.toThrow("'filePath' must be a PDF path");
+    it('should throw error if filePath does not exists', async () => {
+      const errMsg = "'filePath' does not exists";
 
-      await expect(idnxtr({ data: 'regencies', filePath: `${filePath} ` }))
-        .rejects.toThrow("'filePath' must be a PDF path");
+      await expect(idnxtr({ data: 'regencies', filePath: ` ${filePath}` })).rejects.toThrow(errMsg);
+      await expect(idnxtr({ data: 'regencies', filePath: `${filePath} ` })).rejects.toThrow(errMsg);
+      await expect(idnxtr({ data: 'regencies', filePath: ` ${filePath}` })).rejects.toThrow(errMsg);
+      await expect(idnxtr({ data: 'regencies', filePath: `${filePath} ` })).rejects.toThrow(errMsg);
+      await expect(idnxtr({ data: 'regencies', filePath: distPath })).rejects.toThrow(errMsg);
+    });
 
-      await expect(idnxtr({ data: 'regencies', filePath: distPath }))
+    it('should throw error if filePath is not a PDF path', async () => {
+      await expect(idnxtr({
+        data: 'regencies',
+        filePath: path.resolve(__dirname, 'data/test.txt'),
+      }))
         .rejects.toThrow("'filePath' must be a PDF path");
 
       await expect(idnxtr({
         data: 'regencies',
-        filePath: path.resolve(__dirname, 'data/test.txt'),
+        filePath: path.resolve(__dirname, 'data/fake.pdf'),
       }))
         .rejects.toThrow("'filePath' must be a PDF path");
     });
