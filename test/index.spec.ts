@@ -44,18 +44,18 @@ describe('idnxtr', () => {
       await expect(idnxtr({ data: 'regencies', filePath: distPath })).rejects.toThrow(errMsg);
     });
 
-    it('should throw error if filePath is not a PDF path', async () => {
+    it('should throw error if filePath is not a PDF or TXT path', async () => {
       await expect(idnxtr({
         data: 'regencies',
-        filePath: path.resolve(__dirname, 'data/test.txt'),
+        filePath: path.resolve(__dirname, 'data/test.json'),
       }))
-        .rejects.toThrow("'filePath' must be a PDF path");
+        .rejects.toThrow("'filePath' must be a PDF or TXT path");
 
       await expect(idnxtr({
         data: 'regencies',
         filePath: path.resolve(__dirname, 'data/fake.pdf'),
       }))
-        .rejects.toThrow("'filePath' must be a PDF path");
+        .rejects.toThrow("'filePath' must be a PDF or TXT path");
     });
 
     it('should throw error if destination is exists but empty', async () => {
@@ -121,12 +121,30 @@ describe('idnxtr', () => {
         .rejects.toThrow('Page range exceeds the expected range');
     });
 
+    it('should throw error if range is specified and the file is not PDF', async () => {
+      await expect(idnxtr({
+        data: 'regencies',
+        filePath: path.resolve(__dirname, 'data/regencies.txt'),
+        range: '1-2',
+      }))
+        .rejects.toThrow("'range' only works with PDF file");
+    });
+
     it('should throw error if saveRaw is not boolean', async () => {
       await expect(idnxtr({ data: 'regencies', filePath, saveRaw: 1 as unknown as boolean }))
         .rejects.toThrow("'saveRaw' must be a boolean");
 
       await expect(idnxtr({ data: 'regencies', filePath, saveRaw: 'true' as unknown as boolean }))
         .rejects.toThrow("'saveRaw' must be a boolean");
+    });
+
+    it('should throw error if saveRaw is true and the file is not PDF', async () => {
+      await expect(idnxtr({
+        data: 'regencies',
+        filePath: path.resolve(__dirname, 'data/regencies.txt'),
+        saveRaw: true,
+      }))
+        .rejects.toThrow("'saveRaw' only works with PDF file");
     });
 
     it('should throw error if silent is not boolean', async () => {
@@ -219,6 +237,16 @@ describe('idnxtr', () => {
       });
 
       expect(fs.existsSync(`${distPath}/custom.csv`)).toBeTruthy();
+    });
+
+    it('should create a new CSV file from raw file in TXT', async () => {
+      await idnxtr({
+        data: 'regencies',
+        filePath: path.resolve(__dirname, 'data/regencies.txt'),
+        ...flags,
+      });
+
+      expect(fs.existsSync(`${distPath}/regencies.csv`)).toBeTruthy();
     });
   });
 });

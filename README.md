@@ -46,21 +46,22 @@ npm install idn-area-extractor
 
 Access the manual with `idnxtr --help` command:
 
-```bash
+```
 USAGE
-  $ idnxtr [regencies|districts|islands|villages] </path/to/pdf> [OPTIONS]
+  $ idnxtr [regencies|districts|islands|villages] </path/to/file.[pdf|txt]> [OPTIONS]
 
 OPTIONS
   -d, --destination=<path>  Set the folder destination
   -o, --output=<filename>   Set a specific output file name without the file extension
   -r, --range=<range>       Extract specific PDF pages (e.g. 1-2,5,7-10)
-  -R, --save-raw            Save the extracted raw data into .txt file
+  -R, --save-raw            Save the extracted raw data into .txt file (only works with PDF data)
       --silent              Disable all logs
 
 EXAMPLE
   $ idnxtr regencies ~/data/regencies.pdf
   $ idnxtr regencies ~/data/regencies.pdf -r 1-2,5,7-10 -R
   $ idnxtr regencies ~/data/regencies.pdf --range 1-2,5,7-10 --save-raw
+  $ idnxtr regencies ~/data/raw-regencies.txt
 ```
 
 ## API
@@ -76,14 +77,14 @@ Extract the data from the PDF file.
 **Required:**
 
 - `options.data`: Which kind of data should be extracted, either 'regencies', 'districts', 'islands', or 'villages'.
-- `options.filePath`: The path to the PDF file.
+- `options.filePath`: The path to the PDF or TXT file.
 
 Optional:
 
 - `options.destination`: The destination folder to save the CSV file. Default: `process.cwd()`.
 - `options.output`: The output file name without the file extension. Default: `options.data`.
 - `options.range`: Extract specific PDF pages (e.g. 1-2,5,7-10). If not set, all pages will extracted.
-- `options.saveRaw`: Save the extracted raw data into .txt file. Default: `false`.
+- `options.saveRaw`: Save the extracted raw data into .txt file (only works with PDF data). Default: `false`.
 - `options.silent`: Disable all logs.  Default: `false`.
 
 ### Example
