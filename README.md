@@ -12,7 +12,9 @@ This package was developed to ease and speed up the data processing stage of [id
 - [API](#api)
   - [`idnxtr(options)`](#idnxtroptions)
     - [`options`](#options)
-    - [Example](#example)
+  - [Example](#example)
+    - [ESM](#esm)
+    - [CommonJS](#commonjs)
 - [Problem Reporting](#problem-reporting)
   - [Reporting a Bug](#reporting-a-bug)
   - [Requesting a New Feature](#requesting-a-new-feature)
@@ -84,12 +86,12 @@ Optional:
 - `options.saveRaw`: Save the extracted raw data into .txt file. Default: `false`.
 - `options.silent`: Disable all logs.  Default: `false`.
 
-#### Example
+### Example
+
+#### ESM
 
 ```js
-// CommonJS
-const idnxtr = require('idn-area-extractor');
-// ESM
+// .js
 import idnxtr from 'idn-area-extractor';
 
 (async () => {
@@ -103,6 +105,21 @@ import idnxtr from 'idn-area-extractor';
     silent: true,
   });
 })();
+```
+
+#### CommonJS
+
+For **CommonJS** user, you need to use [dynamic import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import) like this:
+
+```js
+// .js
+(async () => {
+  const {default: idnxtr} = await import('idn-area-extractor')
+
+  await idnxtr({
+    // options...
+  })
+})()
 ```
 
 ## Problem Reporting
