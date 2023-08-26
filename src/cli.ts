@@ -4,19 +4,20 @@ import idnxtr, { DataEntity } from './index.js';
 
 const cli = meow(`
   USAGE
-    $ idnxtr [regencies|districts|islands|villages] </path/to/pdf> [OPTIONS]
+    $ idnxtr [regencies|districts|islands|villages] </path/to/file.[pdf|txt]> [OPTIONS]
 
   OPTIONS
     -d, --destination=<path>  Set the folder destination
     -o, --output=<filename>   Set a specific output file name without the file extension
     -r, --range=<range>       Extract specific PDF pages (e.g. 1-2,5,7-10)
-    -R, --save-raw            Save the extracted raw data into .txt file
+    -R, --save-raw            Save the extracted raw data into .txt file (only works with PDF data)
         --silent              Disable all logs
 
   EXAMPLE
     $ idnxtr regencies ~/data/regencies.pdf
     $ idnxtr regencies ~/data/regencies.pdf -r 1-2,5,7-10 -R
     $ idnxtr regencies ~/data/regencies.pdf --range 1-2,5,7-10 --save-raw
+    $ idnxtr regencies ~/data/raw-regencies.txt
 `, {
   importMeta: import.meta,
   description: 'Extract Indonesia area data from PDF',

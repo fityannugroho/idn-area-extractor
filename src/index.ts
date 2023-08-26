@@ -3,7 +3,7 @@ import { existsSync, lstatSync, writeFileSync } from 'fs';
 import ora from 'ora';
 import Papa from 'papaparse';
 import ValidationError from './errors/ValidationError.js';
-import { extractFromPdf, extractRows } from './extractor.js';
+import { extractFromPdf, extractRows, extractTxtFileRows } from './extractor.js';
 import DistrictTransformer from './transformer/DistrictTransformer.js';
 import IslandTransformer from './transformer/IslandTransformer.js';
 import RegencyTransformer from './transformer/RegencyTransformer.js';
@@ -12,6 +12,16 @@ import { Transformer } from './transformer/index.js';
 
 export type DataEntity = 'regencies' | 'districts' | 'islands' | 'villages';
 export const dataEntities = ['regencies', 'districts', 'islands', 'villages'];
+
+async function isFilePdf(path: string) {
+  const fileType = await fileTypeFromFile(path);
+  return fileType?.ext === 'pdf' && fileType.mime === 'application/pdf';
+}
+
+async function isFileTxt(path: string) {
+  const fileType = await fileTypeFromFile(path);
+  return typeof fileType === 'undefined' && path.toLowerCase().endsWith('.txt');
+}
 
 export interface ExtractorOptions {
   /**
@@ -37,7 +47,7 @@ export interface ExtractorOptions {
   output?: string
 
   /**
-   * The path to the PDF file.
+   * The path to the PDF or TXT file.
    */
   filePath: string
 
@@ -49,7 +59,7 @@ export interface ExtractorOptions {
   range?: string
 
   /**
-   * Save the extracted raw data into .txt file.
+   * Save the extracted raw data into .txt file (only works with PDF data).
    */
   saveRaw?: boolean
 
@@ -79,9 +89,10 @@ async function validateOptions(options: ExtractorOptions): Promise<ExtractorOpti
     throw new ValidationError("'filePath' does not exists");
   }
 
-  const fileType = await fileTypeFromFile(filePath);
-  if (!fileType || fileType.ext !== 'pdf' || fileType.mime !== 'application/pdf') {
-    throw new ValidationError("'filePath' must be a PDF path");
+  const isPdf = await isFilePdf(filePath);
+
+  if (!(isPdf || await isFileTxt(filePath))) {
+    throw new ValidationError("'filePath' must be a PDF or TXT path");
   }
 
   if (typeof destination !== 'undefined') {
@@ -114,6 +125,10 @@ async function validateOptions(options: ExtractorOptions): Promise<ExtractorOpti
     throw new ValidationError("'saveRaw' must be a boolean");
   }
 
+  if (saveRaw && !isPdf) {
+    throw new ValidationError("'saveRaw' only works with PDF file");
+  }
+
   if (silent && typeof silent !== 'boolean') {
     throw new ValidationError("'silent' must be a boolean");
   }
@@ -132,13 +147,21 @@ export default async function idnxtr(options: ExtractorOptions) {
   const spinner = ora({ isSilent: silent });
   spinner.start('Extracting data');
 
-  const { pageContents, numPages, pagesExtracted } = await extractFromPdf(filePath, range);
-  const rows = extractRows(pageContents.join('\n'), { trim: true, removeEmpty: true });
-  if (saveRaw) {
-    writeFileSync(`${destination}/raw-${output ?? data}.txt`, pageContents.join('\n'));
-  }
+  let rows: string[] = [];
 
-  spinner.succeed(`${pagesExtracted}/${numPages} pages extracted (${rows.length} rows)`);
+  if (await isFilePdf(filePath)) {
+    const { pageContents, numPages, pagesExtracted } = await extractFromPdf(filePath, range);
+    rows = extractRows(pageContents.join('\n'), { trim: true, removeEmpty: true });
+
+    if (saveRaw) {
+      writeFileSync(`${destination}/raw-${output ?? data}.txt`, pageContents.join('\n'));
+    }
+
+    spinner.succeed(`${pagesExtracted}/${numPages} pages extracted (${rows.length} rows)`);
+  } else {
+    rows = extractTxtFileRows(filePath, { trim: true, removeEmpty: true });
+    spinner.succeed(`${rows.length} rows found`);
+  }
 
   const unparseOptions: Papa.UnparseConfig = {
     escapeChar: '\\',
