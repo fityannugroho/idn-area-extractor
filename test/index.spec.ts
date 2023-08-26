@@ -121,6 +121,15 @@ describe('idnxtr', () => {
         .rejects.toThrow('Page range exceeds the expected range');
     });
 
+    it('should throw error if range is specified and the file is not PDF', async () => {
+      await expect(idnxtr({
+        data: 'regencies',
+        filePath: path.resolve(__dirname, 'data/regencies.txt'),
+        range: '1-2',
+      }))
+        .rejects.toThrow("'range' only works with PDF file");
+    });
+
     it('should throw error if saveRaw is not boolean', async () => {
       await expect(idnxtr({ data: 'regencies', filePath, saveRaw: 1 as unknown as boolean }))
         .rejects.toThrow("'saveRaw' must be a boolean");

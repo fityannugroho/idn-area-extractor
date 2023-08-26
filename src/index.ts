@@ -121,6 +121,10 @@ async function validateOptions(options: ExtractorOptions): Promise<ExtractorOpti
     }
   }
 
+  if (typeof range === 'string' && !isPdf) {
+    throw new ValidationError("'range' only works with PDF file");
+  }
+
   if (saveRaw && typeof saveRaw !== 'boolean') {
     throw new ValidationError("'saveRaw' must be a boolean");
   }
