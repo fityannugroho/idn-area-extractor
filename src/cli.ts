@@ -44,16 +44,8 @@ const cli = meow(`
   },
 });
 
-interface Flags {
-  destination?: string
-  output?: string
-  range?: string
-  saveRaw?: boolean
-  silent?: boolean
-}
-
 const [data, filePath] = cli.input;
-const { ...flags } = cli.flags as Flags;
+const { ...flags } = cli.flags;
 
 idnxtr({
   data: data as DataEntity,
