@@ -58,6 +58,14 @@ describe('idnxtr', () => {
         .rejects.toThrow("'filePath' must be a PDF or TXT path");
     });
 
+    it('should throw error if compare is not boolean', async () => {
+      await expect(idnxtr({ data: 'regencies', filePath, compare: 1 as unknown as boolean }))
+        .rejects.toThrow("'compare' must be a boolean");
+
+      await expect(idnxtr({ data: 'regencies', filePath, compare: 'true' as unknown as boolean }))
+        .rejects.toThrow("'compare' must be a boolean");
+    });
+
     it('should throw error if destination is exists but empty', async () => {
       await expect(idnxtr({ data: 'regencies', filePath, destination: '' }))
         .rejects.toThrow("'destination' must not be empty");
@@ -247,6 +255,14 @@ describe('idnxtr', () => {
       });
 
       expect(fs.existsSync(`${distPath}/regencies.csv`)).toBeTruthy();
+    });
+
+    it('should create a diff-{data}.txt when compare option is true', async () => {
+      await idnxtr({
+        data: 'regencies', filePath, compare: true, ...flags,
+      });
+
+      expect(fs.existsSync(`${distPath}/diff-regencies.txt`)).toBeTruthy();
     });
   });
 });

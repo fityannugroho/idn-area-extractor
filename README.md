@@ -51,6 +51,7 @@ USAGE
   $ idnxtr [regencies|districts|islands|villages] </path/to/file.[pdf|txt]> [OPTIONS]
 
 OPTIONS
+  -c, --compare             Compare the extracted data with the latest data
   -d, --destination=<path>  Set the folder destination
   -o, --output=<filename>   Set a specific output file name without the file extension
   -r, --range=<range>       Extract specific PDF pages (e.g. 1-2,5,7-10)
@@ -81,6 +82,7 @@ Extract the data from the PDF file.
 
 Optional:
 
+- `options.compare`: Compare the extracted data with the latest data. Default: `false`.
 - `options.destination`: The destination folder to save the CSV file. Default: `process.cwd()`.
 - `options.output`: The output file name without the file extension. Default: `options.data`.
 - `options.range`: Extract specific PDF pages (e.g. 1-2,5,7-10). If not set, all pages will extracted.
@@ -99,6 +101,7 @@ import idnxtr from 'idn-area-extractor';
   await idnxtr({
     data: 'regencies',
     filePath: '/path/to/regencies.pdf',
+    compare: true,
     destination: '/path/to/destination',
     output: 'regencies',
     range: '1-2,5,7-10',

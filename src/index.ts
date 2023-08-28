@@ -2,6 +2,8 @@ import { fileTypeFromFile } from 'file-type';
 import { existsSync, lstatSync, writeFileSync } from 'fs';
 import ora from 'ora';
 import Papa from 'papaparse';
+import { getData } from 'idn-area-data';
+import { diff } from 'jest-diff';
 import ValidationError from './errors/ValidationError.js';
 import { extractFromPdf, extractRows, extractTxtFileRows } from './extractor.js';
 import DistrictTransformer from './transformer/DistrictTransformer.js';
@@ -24,6 +26,11 @@ async function isFileTxt(path: string) {
 }
 
 export interface ExtractorOptions {
+  /**
+   * Compare the extracted data with the latest data.
+   */
+  compare?: boolean
+
   /**
    * Which kind of data should be extracted.
    */
@@ -74,7 +81,7 @@ export interface ExtractorOptions {
  */
 async function validateOptions(options: ExtractorOptions): Promise<ExtractorOptions> {
   const {
-    data, destination, filePath, output, range, saveRaw, silent,
+    compare, data, destination, filePath, output, range, saveRaw, silent,
   } = options;
 
   if (!dataEntities.includes(data)) {
@@ -93,6 +100,10 @@ async function validateOptions(options: ExtractorOptions): Promise<ExtractorOpti
 
   if (!(isPdf || await isFileTxt(filePath))) {
     throw new ValidationError("'filePath' must be a PDF or TXT path");
+  }
+
+  if (compare && typeof compare !== 'boolean') {
+    throw new ValidationError("'compare' must be a boolean");
   }
 
   if (typeof destination !== 'undefined') {
@@ -145,7 +156,7 @@ async function validateOptions(options: ExtractorOptions): Promise<ExtractorOpti
 
 export default async function idnxtr(options: ExtractorOptions) {
   const {
-    data, destination = process.cwd(), filePath, output, range, saveRaw, silent,
+    compare, data, destination = process.cwd(), filePath, output, range, saveRaw, silent,
   } = await validateOptions(options);
 
   const spinner = ora({ isSilent: silent });
@@ -191,10 +202,40 @@ export default async function idnxtr(options: ExtractorOptions) {
   spinner.start('Transforming data');
 
   const results = transformer.transformMany(rows);
+  const resultsCsv = Papa.unparse(transformer.transformForCsv(results), unparseOptions);
   writeFileSync(
     `${destination}/${output ?? data}.csv`,
-    Papa.unparse(transformer.transformForCsv(results), unparseOptions),
+    resultsCsv,
   );
 
   spinner.succeed(`${results.length} data transformed`);
+
+  if (!compare) {
+    return;
+  }
+
+  spinner.start('Comparing data');
+
+  const latestData = await getData(data);
+  const latestDataCsv = Papa.unparse<unknown>(latestData, unparseOptions);
+  const noColor = (arg: string) => arg;
+  const diffResults = diff(latestDataCsv, resultsCsv, {
+    contextLines: 2,
+    expand: false,
+    includeChangeCounts: true,
+    aColor: noColor,
+    bColor: noColor,
+    changeColor: noColor,
+    commonColor: noColor,
+    patchColor: noColor,
+  });
+
+  if (diffResults) {
+    writeFileSync(
+      `${destination}/diff-${output ?? data}.txt`,
+      diffResults,
+    );
+  }
+
+  spinner.succeed('Data compared');
 }

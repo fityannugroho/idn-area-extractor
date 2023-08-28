@@ -7,6 +7,7 @@ const cli = meow(`
     $ idnxtr [regencies|districts|islands|villages] </path/to/file.[pdf|txt]> [OPTIONS]
 
   OPTIONS
+    -c, --compare             Compare the extracted data with the latest data
     -d, --destination=<path>  Set the folder destination
     -o, --output=<filename>   Set a specific output file name without the file extension
     -r, --range=<range>       Extract specific PDF pages (e.g. 1-2,5,7-10)
@@ -22,6 +23,10 @@ const cli = meow(`
   importMeta: import.meta,
   description: 'Extract Indonesia area data from PDF',
   flags: {
+    compare: {
+      shortFlag: 'c',
+      type: 'boolean',
+    },
     destination: {
       shortFlag: 'd',
       type: 'string',
