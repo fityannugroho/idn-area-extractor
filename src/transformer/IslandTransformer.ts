@@ -33,7 +33,8 @@ export default class IslandTransformer implements Transformer<Island, IslandCsv>
   transformMany(data: string[]): Island[] {
     return data
       .map((row) => this.transform(row))
-      .filter((res): res is Island => res !== null);
+      .filter((res): res is Island => res !== null)
+      .sort((a, b) => a.code.localeCompare(b.code));
   }
 
   transformForCsv(data: Island[]): IslandCsv[] {

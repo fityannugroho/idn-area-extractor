@@ -60,7 +60,8 @@ export default class VillageTransformer implements Transformer<Village, VillageC
   transformMany(data: string[]): Village[] {
     return this.prepareData(data)
       .map((row) => this.transform(row))
-      .filter((res): res is Village => res !== null);
+      .filter((res): res is Village => res !== null)
+      .sort((a, b) => a.code.localeCompare(b.code));
   }
 
   transformForCsv(data: Village[]): VillageCsv[] {

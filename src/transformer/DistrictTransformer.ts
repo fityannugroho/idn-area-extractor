@@ -39,7 +39,8 @@ export default class DistrictTransformer implements Transformer<District, Distri
   transformMany(data: string[]): District[] {
     return data
       .map((row) => this.transform(row))
-      .filter((res): res is District => res !== null);
+      .filter((res): res is District => res !== null)
+      .sort((a, b) => a.code.localeCompare(b.code));
   }
 
   transformForCsv(data: District[]): DistrictCsv[] {
