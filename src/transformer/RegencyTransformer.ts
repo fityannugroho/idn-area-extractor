@@ -51,7 +51,8 @@ export default class RegencyTransformer implements Transformer<Regency, RegencyC
   transformMany(data: string[]): Regency[] {
     return this.prepareData(data)
       .map((row) => this.transform(row))
-      .filter((res): res is Regency => res !== null);
+      .filter((res): res is Regency => res !== null)
+      .sort((a, b) => a.code.localeCompare(b.code));
   }
 
   transformForCsv(data: Regency[]): RegencyCsv[] {
