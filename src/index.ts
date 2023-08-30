@@ -1,9 +1,9 @@
 import { fileTypeFromFile } from 'file-type';
 import { existsSync, lstatSync, writeFileSync } from 'fs';
-import ora from 'ora';
-import Papa from 'papaparse';
 import { getData } from 'idn-area-data';
 import { diff } from 'jest-diff';
+import ora from 'ora';
+import Papa from 'papaparse';
 import ValidationError from './errors/ValidationError.js';
 import { extractFromPdf, extractRows, extractTxtFileRows } from './extractor.js';
 import DistrictTransformer from './transformer/DistrictTransformer.js';
@@ -13,9 +13,11 @@ import VillageTransformer from './transformer/VillageTransformer.js';
 import { Transformer } from './transformer/index.js';
 
 export type DataEntity = 'regencies' | 'districts' | 'islands' | 'villages';
-export const dataEntities = ['regencies', 'districts', 'islands', 'villages'];
+export const dataEntities: readonly DataEntity[] = [
+  'regencies', 'districts', 'islands', 'villages',
+];
 
-async function isFilePdf(path: string) {
+export async function isFilePdf(path: string) {
   const fileType = await fileTypeFromFile(path);
   return fileType?.ext === 'pdf' && fileType.mime === 'application/pdf';
 }
