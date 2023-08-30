@@ -17,6 +17,7 @@ const cli = meow(`
         --silent              Disable all logs
 
   EXAMPLE
+    $ idnxtr
     $ idnxtr regencies ~/data/regencies.pdf
     $ idnxtr regencies ~/data/regencies.pdf -r 1-2,5,7-10 -R
     $ idnxtr regencies ~/data/regencies.pdf --range 1-2,5,7-10 --save-raw

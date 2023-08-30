@@ -9,6 +9,7 @@ This package was developed to ease and speed up the data processing stage of [id
 - [Prerequisite](#prerequisite)
 - [Installation](#installation)
 - [Usage](#usage)
+  - [Interactive UI](#interactive-ui)
 - [API](#api)
   - [`idnxtr(options)`](#idnxtroptions)
     - [`options`](#options)
@@ -59,11 +60,18 @@ OPTIONS
       --silent              Disable all logs
 
 EXAMPLE
+  $ idnxtr
   $ idnxtr regencies ~/data/regencies.pdf
   $ idnxtr regencies ~/data/regencies.pdf -r 1-2,5,7-10 -R
   $ idnxtr regencies ~/data/regencies.pdf --range 1-2,5,7-10 --save-raw
   $ idnxtr regencies ~/data/raw-regencies.txt
 ```
+
+### Interactive UI
+
+Run `idnxtr` without arguments to launch the interactive UI that guides you to extracting the data.
+
+![Screenshot UI](media/screenshot-ui.png)
 
 ## API
 
