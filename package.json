@@ -58,6 +58,7 @@
     "vitest": "^0.34.3"
   },
   "dependencies": {
+    "@inquirer/prompts": "^3.0.4",
     "file-type": "^18.5.0",
     "idn-area-data": "^2.2.0",
     "jest-diff": "^29.6.4",
