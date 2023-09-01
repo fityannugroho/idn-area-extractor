@@ -181,8 +181,9 @@ export default async function idnxtr(options: ExtractorOptions) {
   }
 
   const unparseOptions: Papa.UnparseConfig = {
-    escapeChar: '\\',
+    escapeChar: '',
     newline: '\n',
+    quoteChar: '',
   };
 
   let transformer: Transformer;
