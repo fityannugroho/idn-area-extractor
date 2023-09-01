@@ -3,7 +3,7 @@ import { extractTxtFileRows } from './extractor.js';
 
 interface DividerWordsOptions {
   withTypos?: boolean
-  excludedWords?: string[]
+  excludedWords?: readonly string[]
 }
 
 export default function getDividerWords(options?: DividerWordsOptions) {
