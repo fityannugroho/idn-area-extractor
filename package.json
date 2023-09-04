@@ -66,6 +66,7 @@
     "multi-integer-range": "^5.2.0",
     "ora": "^7.0.1",
     "papaparse": "^5.4.1",
+    "pdf2json": "^3.0.4",
     "pdfjs-dist": "^3.9.179"
   }
 }
