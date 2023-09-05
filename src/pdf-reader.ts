@@ -1,56 +1,75 @@
-import pdfjs from 'pdfjs-dist';
-import { TextItem } from 'pdfjs-dist/types/src/display/api.js';
-
-function isTextItem(item: unknown): item is TextItem {
-  return typeof (item as TextItem).str === 'string';
-}
+import Pdfparser, { Output } from 'pdf2json';
 
 export default class PdfReader {
-  protected filePath: string;
+  // TODO: this can make memory leaks when the PDF contains many pages
+  protected output: Output | undefined;
 
-  protected pdf?: pdfjs.PDFDocumentProxy;
+  protected pdfParser: Pdfparser;
 
-  constructor(filePath: string) {
-    this.filePath = filePath;
+  constructor() {
+    this.pdfParser = new Pdfparser();
   }
 
-  async load() {
-    this.pdf = await pdfjs.getDocument(this.filePath).promise;
+  async load(filePath: string) {
+    await this.pdfParser.loadPDF(filePath);
+
+    this.output = await new Promise<Output>((resolve, reject) => {
+      this.pdfParser.on('pdfParser_dataError', (err) => {
+        reject(err);
+      });
+
+      this.pdfParser.on('pdfParser_dataReady', (data) => {
+        resolve(data);
+      });
+    });
+
+    return this;
   }
 
   getNumPages() {
-    if (!this.pdf) {
-      throw new Error('PDF not loaded');
-    }
-    return this.pdf.numPages;
-  }
-
-  async getPageContent(pageNumber = 1) {
-    if (!this.pdf) {
+    if (!this.output) {
       throw new Error('PDF not loaded');
     }
 
-    const page = await this.pdf.getPage(pageNumber);
-    const textContent = await page.getTextContent();
-    const contentItems = textContent.items;
-
-    return contentItems;
+    return this.output.Pages.length;
   }
 
-  async getPageContentString(pageNumber = 1) {
-    const contentItems = await this.getPageContent(pageNumber);
-    const res: string[] = [];
+  /**
+   * @param pageNumber The page number to get. The first page is 1.
+   */
+  getPageContentString(pageNumber = 1) {
+    if (!this.output) {
+      throw new Error('PDF not loaded');
+    }
 
-    contentItems.forEach((item) => {
-      if (isTextItem(item)) {
-        if (item.hasEOL) {
-          res.push(item.str, '\n');
-        } else {
-          res.push(item.str);
-        }
+    const texts = this.output.Pages.at(pageNumber - 1)?.Texts;
+
+    if (!texts) {
+      throw new Error(`Page ${pageNumber} not found`);
+    }
+
+    let strInPage = '';
+    let prevY: number;
+
+    texts.forEach((text) => {
+      const { y, R } = text;
+
+      if (prevY && y - prevY > 0.7) {
+        strInPage += '\n';
       }
+
+      R.forEach((textRun) => {
+        const phrase = decodeURIComponent(textRun.T)
+          .trim().split(' ')
+          .filter((word) => word !== '')
+          .join(' ');
+
+        strInPage = `${strInPage} ${phrase}`.trim();
+      });
+
+      prevY = y;
     });
 
-    return res.join('');
+    return `${strInPage}\n`;
   }
 }
