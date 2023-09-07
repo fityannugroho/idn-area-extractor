@@ -1,6 +1,9 @@
 // Below are examples of island data extracted from a source file in PDF format
 
+11.01.40002 Pulau Batutunggal 03°24'55" U 097°04'21" T TBP
 13.00.40001 Pulau Bando 00°45'38.07" S 099°59'47.69" T
 21.71.40308 Pulau Petang 00°47'18.61" U 104°09'01.32" T TBP
 21.71.40309 Pulau Petong 00°37'37.99" U 104°05'28.00" T BP
 21.71.40320 Pulau Punai 01°04'42.60" U 103°52'24.10" T
+52.01.40031 Gili Sarang Timur 08°53'54.11"" S 116°02'58.02"" T TBP Perbaikan nama pulau semula
+71.03.40118 Pulau Balontohe Besar 03° 31'33.49" U 125° 39'37.53" T

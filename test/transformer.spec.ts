@@ -66,6 +66,14 @@ validateTransformer({
   data: extractTxtFileRows(path.resolve(__dirname, 'data/islands.txt')),
   expected: [
     {
+      code: '110140002',
+      regencyCode: '1101',
+      coordinate: '03°24\'55.00" N 097°04\'21.00" E',
+      isPopulated: false,
+      isOutermostSmall: false,
+      name: 'Pulau Batutunggal',
+    },
+    {
       code: '130040001',
       regencyCode: '',
       coordinate: '00°45\'38.07" S 099°59\'47.69" E',
@@ -96,6 +104,22 @@ validateTransformer({
       isPopulated: false,
       isOutermostSmall: false,
       name: 'Pulau Punai',
+    },
+    {
+      code: '520140031',
+      regencyCode: '5201',
+      coordinate: '08°53\'54.11" S 116°02\'58.02" E',
+      isPopulated: false,
+      isOutermostSmall: false,
+      name: 'Gili Sarang Timur',
+    },
+    {
+      code: '710340118',
+      regencyCode: '7103',
+      coordinate: '03°31\'33.49" N 125°39\'37.53" E',
+      isPopulated: false,
+      isOutermostSmall: false,
+      name: 'Pulau Balontohe Besar',
     },
   ],
 });
