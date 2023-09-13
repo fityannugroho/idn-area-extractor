@@ -32,7 +32,7 @@ export default class DistrictTransformer implements Transformer<District, Distri
     return {
       code,
       regencyCode: code.substring(0, 4),
-      name: match[2].toUpperCase(),
+      name: match[2],
     };
   }
 
