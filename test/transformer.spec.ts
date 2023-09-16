@@ -53,10 +53,10 @@ validateTransformer({
   transformer: new DistrictTransformer(),
   data: extractTxtFileRows(path.resolve(__dirname, 'data/districts.txt')),
   expected: [
-    { code: '110101', regencyCode: '1101', name: 'BAKONGAN' },
-    { code: '110102', regencyCode: '1101', name: 'KLUET UTARA' },
-    { code: '110103', regencyCode: '1101', name: 'KLUET SELATAN' },
-    { code: '110104', regencyCode: '1101', name: 'LABUHANHAJI' },
+    { code: '110101', regencyCode: '1101', name: 'Bakongan' },
+    { code: '110102', regencyCode: '1101', name: 'Kluet Utara' },
+    { code: '110103', regencyCode: '1101', name: 'Kluet Selatan' },
+    { code: '110104', regencyCode: '1101', name: 'Labuhanhaji' },
   ],
 });
 
@@ -129,12 +129,12 @@ validateTransformer({
   transformer: new VillageTransformer(),
   data: extractTxtFileRows(path.resolve(__dirname, 'data/villages.txt')),
   expected: [
-    { code: '1101012001', districtCode: '110101', name: 'KEUDE BAKONGAN' },
-    { code: '1101012002', districtCode: '110101', name: 'UJONG MANGKI' },
-    { code: '1101012015', districtCode: '110101', name: 'DARUL IKHSAN' },
-    { code: '1111052003', districtCode: '111105', name: 'MATANG GLUMPANG DUA MNS. TIMU (X)' },
-    { code: '1114022010', districtCode: '111402', name: 'DATAR LUAS' },
-    { code: '1219112003', districtCode: '121911', name: 'PERKEBUNAN TANAH DATAR' },
-    { code: '1307042001', districtCode: '130704', name: 'TJ. HARO SIKABU-KABU PD. PANJANG' },
+    { code: '1101012001', districtCode: '110101', name: 'Keude Bakongan' },
+    { code: '1101012002', districtCode: '110101', name: 'Ujong Mangki' },
+    { code: '1101012015', districtCode: '110101', name: 'Darul Ikhsan' },
+    { code: '1111052003', districtCode: '111105', name: 'Matang Glumpang Dua Mns. Timu (X)' },
+    { code: '1114022010', districtCode: '111402', name: 'Datar Luas' },
+    { code: '1219112003', districtCode: '121911', name: 'Perkebunan Tanah Datar' },
+    { code: '1307042001', districtCode: '130704', name: 'Tj. Haro Sikabu-kabu Pd. Panjang' },
   ],
 });

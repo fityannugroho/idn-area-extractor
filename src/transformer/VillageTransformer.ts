@@ -64,7 +64,7 @@ export default class VillageTransformer implements Transformer<Village, VillageC
       code,
       districtCode: code.substring(0, 6),
       // The regex was tested in https://regex101.com/r/RX8JCD
-      name: match[2].replace(/(?<!\s|\d)(\d+?)$/, '').toUpperCase(),
+      name: match[2].replace(/(?<!\s|\d)(\d+?)$/, ''),
     };
   }
 
