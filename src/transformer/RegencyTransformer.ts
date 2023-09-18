@@ -1,4 +1,4 @@
-import { RegencyTransformed as Regency, Regency as RegencyCsv } from 'idn-area-data';
+import { Regency, RegencyCsv } from 'idn-area-data';
 import { Transformer } from './index.js';
 
 export default class RegencyTransformer implements Transformer<Regency, RegencyCsv> {

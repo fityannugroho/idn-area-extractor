@@ -1,4 +1,4 @@
-import { DistrictTransformed as District, District as DistrictCsv } from 'idn-area-data';
+import { District, DistrictCsv } from 'idn-area-data';
 import getDividerWords from '~/divider-words.js';
 import { Transformer } from './index.js';
 

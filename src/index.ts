@@ -1,6 +1,8 @@
 import { fileTypeFromFile } from 'file-type';
 import { existsSync, lstatSync, writeFileSync } from 'fs';
-import { getData } from 'idn-area-data';
+import {
+  getDistricts, getIslands, getRegencies, getVillages,
+} from 'idn-area-data';
 import { diff } from 'jest-diff';
 import ora from 'ora';
 import Papa from 'papaparse';
@@ -219,7 +221,22 @@ export default async function idnxtr(options: ExtractorOptions) {
 
   spinner.start('Comparing data');
 
-  const latestData = await getData(data);
+  let latestData: unknown[];
+  switch (data) {
+    case 'regencies':
+      latestData = await getRegencies();
+      break;
+    case 'districts':
+      latestData = await getDistricts();
+      break;
+    case 'islands':
+      latestData = await getIslands();
+      break;
+    default:
+      latestData = await getVillages();
+      break;
+  }
+
   const latestDataCsv = Papa.unparse<unknown>(latestData, unparseOptions);
   const noColor = (arg: string) => arg;
   const diffResults = diff(latestDataCsv, resultsCsv, {
