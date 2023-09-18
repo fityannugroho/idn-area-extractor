@@ -27,12 +27,13 @@ export default class DistrictTransformer implements Transformer<District, Distri
       return null;
     }
 
-    const code = match[1].replace(/\./g, '');
+    const [, code, name] = match;
+    const [provinceCode, regencyCode] = code.split('.');
 
     return {
       code,
-      regencyCode: code.substring(0, 4),
-      name: match[2],
+      regencyCode: `${provinceCode}.${regencyCode}`,
+      name,
     };
   }
 

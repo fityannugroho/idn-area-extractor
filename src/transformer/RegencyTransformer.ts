@@ -39,12 +39,13 @@ export default class RegencyTransformer implements Transformer<Regency, RegencyC
       return null;
     }
 
-    const code = match[2].replace(/\./g, '');
+    const [, name, code] = match;
+    const [provinceCode] = code.split('.');
 
     return {
       code,
-      provinceCode: code.substring(0, 2),
-      name: match[1].replace(/KAB(?:\.?)\s/, 'KABUPATEN '),
+      provinceCode,
+      name: name.replace(/KAB(?:\.?)\s/, 'KABUPATEN '),
     };
   }
 

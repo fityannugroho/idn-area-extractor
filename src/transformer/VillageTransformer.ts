@@ -58,13 +58,14 @@ export default class VillageTransformer implements Transformer<Village, VillageC
       return null;
     }
 
-    const code = match[1].replace(/\./g, '');
+    const [, code, name] = match;
+    const [provinceCode, regencyCode, districtCode] = code.split('.');
 
     return {
       code,
-      districtCode: code.substring(0, 6),
+      districtCode: `${provinceCode}.${regencyCode}.${districtCode}`,
       // The regex was tested in https://regex101.com/r/RX8JCD
-      name: match[2].replace(/(?<!\s|\d)(\d+?)$/, ''),
+      name: name.replace(/(?<!\s|\d)(\d+?)$/, ''),
     };
   }
 

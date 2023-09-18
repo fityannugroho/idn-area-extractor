@@ -19,11 +19,11 @@ export default class IslandTransformer implements Transformer<Island, IslandCsv>
     }
 
     const [, code, name, ltDeg, ltMin, ltSec, ltPole, lnDeg, lnMin, lnSec, lnPole, desc] = match;
-    const [provinceCodePart, regencyCodePart] = code.split('.');
+    const [provinceCode, regencyCode] = code.split('.');
 
     return {
-      code: code.replace(/\./g, ''),
-      regencyCode: regencyCodePart === '00' ? '' : `${provinceCodePart}${regencyCodePart}`,
+      code,
+      regencyCode: regencyCode === '00' ? '' : `${provinceCode}.${regencyCode}`,
       name,
       coordinate: `${ltDeg}°${
         ltMin}'${
