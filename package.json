@@ -58,7 +58,7 @@
   "dependencies": {
     "@inquirer/prompts": "^3.0.4",
     "file-type": "^18.5.0",
-    "idn-area-data": "^2.2.2",
+    "idn-area-data": "^3.0.0",
     "jest-diff": "^29.6.4",
     "meow": "^12.1.1",
     "multi-integer-range": "^5.2.0",
