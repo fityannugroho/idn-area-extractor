@@ -1,4 +1,4 @@
-import { IslandTransformed as Island, Island as IslandCsv } from 'idn-area-data';
+import { Island, IslandCsv } from 'idn-area-data';
 import { Transformer } from './index.js';
 
 export default class IslandTransformer implements Transformer<Island, IslandCsv> {
@@ -48,7 +48,7 @@ export default class IslandTransformer implements Transformer<Island, IslandCsv>
   transformForCsv(data: Island[]): IslandCsv[] {
     return data.map((island) => ({
       code: island.code,
-      regency_code: island.regencyCode,
+      regency_code: island.regencyCode ?? '',
       coordinate: island.coordinate,
       is_populated: island.isPopulated ? '1' : '0',
       is_outermost_small: island.isOutermostSmall ? '1' : '0',

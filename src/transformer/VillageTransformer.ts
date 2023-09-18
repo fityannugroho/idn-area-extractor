@@ -1,4 +1,4 @@
-import { VillageTransformed as Village, Village as VillageCsv } from 'idn-area-data';
+import { Village, VillageCsv } from 'idn-area-data';
 import getDividerWords from '~/divider-words.js';
 import { Transformer } from './index.js';
 
