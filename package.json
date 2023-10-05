@@ -1,6 +1,6 @@
 {
   "name": "idn-area-extractor",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Extract Indonesia area data from the raw sources to CSV",
   "type": "module",
   "main": "lib/index.js",
