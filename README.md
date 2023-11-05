@@ -4,24 +4,6 @@ Extract Indonesia area data from the raw sources to CSV.
 
 This package was developed to ease and speed up the data processing stage of [idn-area-data](https://github.com/fityannugroho/idn-area-data).
 
-<h2>Table of Contents</h2>
-
-- [Prerequisite](#prerequisite)
-- [Installation](#installation)
-- [Usage](#usage)
-  - [Interactive UI](#interactive-ui)
-- [API](#api)
-  - [`idnxtr(options)`](#idnxtroptions)
-    - [`options`](#options)
-  - [Example](#example)
-    - [ESM](#esm)
-    - [CommonJS](#commonjs)
-- [Problem Reporting](#problem-reporting)
-  - [Reporting a Bug](#reporting-a-bug)
-  - [Requesting a New Feature](#requesting-a-new-feature)
-  - [Asking a Question](#asking-a-question)
-- [Support This Project](#support-this-project)
-
 ## Prerequisite
 
 - Node.js 18 or later
@@ -152,6 +134,6 @@ If you have a question, you can search for answers in the [GitHub Discussions Q&
 
 ## Support This Project
 
-<a href="https://trakteer.id/fityannugroho/tip" target="_blank"><img id="wse-buttons-preview" src="https://cdn.trakteer.id/images/embed/trbtn-red-6.png" style="border: 0px none; height: 36px; --darkreader-inline-border-top: currentcolor; --darkreader-inline-border-right: currentcolor; --darkreader-inline-border-bottom: currentcolor; --darkreader-inline-border-left: currentcolor;" alt="Trakteer Saya" data-darkreader-inline-border-top="" data-darkreader-inline-border-right="" data-darkreader-inline-border-bottom="" data-darkreader-inline-border-left="" height="40"></a>
+Give a ⭐️ if this project helped you!
 
 You can support this project by donating via [GitHub Sponsor](https://github.com/sponsors/fityannugroho), [Trakteer](https://trakteer.id/fityannugroho/tip), or [Saweria](https://saweria.co/fityannugroho).
