@@ -1,5 +1,6 @@
 import { District, DistrictCsv } from 'idn-area-data';
 import getDividerWords from '~/divider-words.js';
+import { regexMatcher } from '~/helpers.js';
 import { Transformer } from './index.js';
 
 export default class DistrictTransformer implements Transformer<District, DistrictCsv> {
@@ -21,13 +22,13 @@ export default class DistrictTransformer implements Transformer<District, Distri
   }
 
   transform(data: string): District | null {
-    const match = data.match(this.getRegex());
+    const match = regexMatcher(this.getRegex(), data);
 
-    if (!match?.length) {
+    if (!match?.groups.length) {
       return null;
     }
 
-    const [, code, name] = match;
+    const [code, name] = match.groups;
     const [provinceCode, regencyCode] = code.split('.');
 
     return {

@@ -1,4 +1,5 @@
 import { Island, IslandCsv } from 'idn-area-data';
+import { regexMatcher } from '~/helpers.js';
 import { Transformer } from './index.js';
 
 export default class IslandTransformer implements Transformer<Island, IslandCsv> {
@@ -12,13 +13,15 @@ export default class IslandTransformer implements Transformer<Island, IslandCsv>
   }
 
   transform(data: string): Island | null {
-    const match = data.match(this.getRegex());
+    const match = regexMatcher(this.getRegex(), data);
 
-    if (!match?.length) {
+    if (!match?.groups.length) {
       return null;
     }
 
-    const [, code, name, ltDeg, ltMin, ltSec, ltPole, lnDeg, lnMin, lnSec, lnPole, desc] = match;
+    const [
+      code, name, ltDeg, ltMin, ltSec, ltPole, lnDeg, lnMin, lnSec, lnPole, desc,
+    ] = match.groups;
     const [provinceCode, regencyCode] = code.split('.');
 
     return {
