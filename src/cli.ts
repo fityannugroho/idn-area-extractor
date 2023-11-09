@@ -91,7 +91,7 @@ async function main() {
     }
 
     flags.destination = await input({
-      message: 'Enter the destination folder:',
+      message: 'Set specific destination folder?',
     });
 
     flags.output = await input({
