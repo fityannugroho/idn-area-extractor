@@ -10,7 +10,7 @@ const cli = meow(`
 
   OPTIONS
     -c, --compare             Compare the extracted data with the latest data
-    -d, --destination=<path>  Set the folder destination
+    -d, --destination=<path>  Set the folder destination. Default: current working directory
     -o, --output=<filename>   Set a specific output file name without the file extension
     -r, --range=<range>       Extract specific PDF pages (e.g. 1-2,5,7-10)
     -R, --save-raw            Save the extracted raw data into .txt file (only works with PDF data)
@@ -92,7 +92,6 @@ async function main() {
 
     flags.destination = await input({
       message: 'Enter the destination folder:',
-      default: process.cwd(),
     });
 
     flags.output = await input({

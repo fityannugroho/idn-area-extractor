@@ -1,11 +1,13 @@
 import { fileTypeFromFile } from 'file-type';
-import { existsSync, lstatSync, writeFileSync } from 'fs';
 import {
   getDistricts, getIslands, getRegencies, getVillages,
 } from 'idn-area-data';
 import { diff } from 'jest-diff';
+import fs from 'node:fs';
+import path from 'node:path';
 import ora from 'ora';
 import Papa from 'papaparse';
+import DirectoryError from './errors/DirectoryError.js';
 import ValidationError from './errors/ValidationError.js';
 import { extractFromPdf, extractRows, extractTxtFileRows } from './extractor.js';
 import DistrictTransformer from './transformer/DistrictTransformer.js';
@@ -19,14 +21,14 @@ export const dataEntities: readonly DataEntity[] = [
   'regencies', 'districts', 'islands', 'villages',
 ];
 
-export async function isFilePdf(path: string) {
-  const fileType = await fileTypeFromFile(path);
+export async function isFilePdf(fpath: string) {
+  const fileType = await fileTypeFromFile(fpath);
   return fileType?.ext === 'pdf' && fileType.mime === 'application/pdf';
 }
 
-async function isFileTxt(path: string) {
-  const fileType = await fileTypeFromFile(path);
-  return typeof fileType === 'undefined' && path.toLowerCase().endsWith('.txt');
+async function isFileTxt(fpath: string) {
+  const fileType = await fileTypeFromFile(fpath);
+  return typeof fileType === 'undefined' && fpath.toLowerCase().endsWith('.txt');
 }
 
 export interface ExtractorOptions {
@@ -43,10 +45,7 @@ export interface ExtractorOptions {
   /**
    * The folder destination.
    *
-   * @default
-   * ```js
-   * process.cwd()
-   * ```
+   * The default is the current working directory.
    */
   destination?: string
 
@@ -96,7 +95,7 @@ async function validateOptions(options: ExtractorOptions): Promise<ExtractorOpti
     throw new ValidationError("'filePath' is required");
   }
 
-  if (!existsSync(filePath) || !lstatSync(filePath).isFile()) {
+  if (!fs.existsSync(filePath) || !fs.lstatSync(filePath).isFile()) {
     throw new ValidationError("'filePath' does not exists");
   }
 
@@ -115,8 +114,10 @@ async function validateOptions(options: ExtractorOptions): Promise<ExtractorOpti
       throw new ValidationError("'destination' must not be empty");
     }
 
-    if (!existsSync(destination) || !lstatSync(destination).isDirectory()) {
-      throw new ValidationError("'destination' must be a directory path");
+    // Validate the directory path syntax and ensure it is a directory without a filename.
+    const { base, name } = path.parse(destination);
+    if (base !== name) {
+      throw new ValidationError("'destination' must be a valid directory path");
     }
   }
 
@@ -163,6 +164,18 @@ export default async function idnxtr(options: ExtractorOptions) {
     compare, data, destination = process.cwd(), filePath, output, range, saveRaw, silent,
   } = await validateOptions(options);
 
+  // Create the directory if it doesn't exist.
+  if (!fs.existsSync(destination)) {
+    try {
+      fs.mkdirSync(destination, { recursive: true });
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new DirectoryError(error.message);
+      }
+      throw new DirectoryError(`Failed to create '${destination}' directory path`);
+    }
+  }
+
   const spinner = ora({ isSilent: silent });
   spinner.start('Extracting data');
 
@@ -173,7 +186,10 @@ export default async function idnxtr(options: ExtractorOptions) {
     rows = extractRows(pageContents.join('\n'), { trim: true, removeEmpty: true });
 
     if (saveRaw) {
-      writeFileSync(`${destination}/raw-${output ?? data}.txt`, pageContents.join('\n'));
+      fs.writeFileSync(
+        path.resolve(destination, `raw-${output ?? data}.txt`),
+        pageContents.join('\n'),
+      );
     }
 
     spinner.succeed(`${pagesExtracted}/${numPages} pages extracted (${rows.length} rows)`);
@@ -208,8 +224,8 @@ export default async function idnxtr(options: ExtractorOptions) {
 
   const results = transformer.transformMany(rows);
   const resultsCsv = Papa.unparse(transformer.transformForCsv(results), unparseOptions);
-  writeFileSync(
-    `${destination}/${output ?? data}.csv`,
+  fs.writeFileSync(
+    path.resolve(destination, `${output ?? data}.csv`),
     resultsCsv,
   );
 
@@ -251,8 +267,8 @@ export default async function idnxtr(options: ExtractorOptions) {
   });
 
   if (diffResults) {
-    writeFileSync(
-      `${destination}/diff-${output ?? data}.txt`,
+    fs.writeFileSync(
+      path.resolve(destination, `diff-${output ?? data}.txt`),
       diffResults,
     );
   }
