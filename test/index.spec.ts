@@ -76,7 +76,7 @@ describe('idnxtr', () => {
 
     it('should throw error if destination is not a folder path', async () => {
       await expect(idnxtr({ data: 'regencies', filePath, destination: filePath }))
-        .rejects.toThrow("'destination' must be a directory path");
+        .rejects.toThrow("'destination' must be a valid directory path");
     });
 
     it('should throw error if output is exists but empty', async () => {
