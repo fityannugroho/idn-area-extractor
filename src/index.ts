@@ -10,6 +10,7 @@ import Papa from 'papaparse';
 import DirectoryError from './errors/DirectoryError.js';
 import ValidationError from './errors/ValidationError.js';
 import { extractFromPdf, extractRows, extractTxtFileRows } from './extractor.js';
+import { regexMatcher } from './helpers.js';
 import DistrictTransformer from './transformer/DistrictTransformer.js';
 import IslandTransformer from './transformer/IslandTransformer.js';
 import RegencyTransformer from './transformer/RegencyTransformer.js';
@@ -126,13 +127,13 @@ async function validateOptions(options: ExtractorOptions): Promise<ExtractorOpti
       throw new ValidationError("'output' must not be empty");
     }
 
-    if (!output.match(/^[A-Za-z0-9_\- ]+$/)) {
+    if (!regexMatcher(/^[A-Za-z0-9_\- ]+$/, output)) {
       throw new ValidationError("'output' contains forbidden character(s)");
     }
   }
 
   if (typeof range !== 'undefined') {
-    if (!range.match(/^(?:\d-?,?)+\b$/)) {
+    if (!regexMatcher(/^(?:\d-?,?)+\b$/, range)) {
       throw new ValidationError("'range' format is invalid");
     }
   }

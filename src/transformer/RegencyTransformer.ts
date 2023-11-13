@@ -1,4 +1,5 @@
 import { Regency, RegencyCsv } from 'idn-area-data';
+import { regexMatcher } from '~/helpers.js';
 import { Transformer } from './index.js';
 
 export default class RegencyTransformer implements Transformer<Regency, RegencyCsv> {
@@ -18,7 +19,7 @@ export default class RegencyTransformer implements Transformer<Regency, RegencyC
       // The regex was tested in https://regex101.com/r/l1PJvE
       const regencyCodeRegex = /^((?:KAB\.?|KOTA)\s[A-Z. ]+)\s/i;
 
-      if (row.match(regencyCodeRegex)) {
+      if (regexMatcher(regencyCodeRegex, row)) {
         mergedRows.push(row);
       } else {
         const lastRow = mergedRows.pop();
@@ -33,13 +34,13 @@ export default class RegencyTransformer implements Transformer<Regency, RegencyC
   }
 
   transform(data: string): Regency | null {
-    const match = data.match(this.getRegex());
+    const match = regexMatcher(this.getRegex(), data);
 
-    if (!match?.length) {
+    if (!match?.groups.length) {
       return null;
     }
 
-    const [, name, code] = match;
+    const [name, code] = match.groups;
     const [provinceCode] = code.split('.');
 
     return {

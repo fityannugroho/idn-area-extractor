@@ -1,4 +1,5 @@
 import { Island, IslandCsv } from 'idn-area-data';
+import { regexMatcher } from '~/helpers.js';
 import { Transformer } from './index.js';
 
 export default class IslandTransformer implements Transformer<Island, IslandCsv> {
@@ -8,17 +9,19 @@ export default class IslandTransformer implements Transformer<Island, IslandCsv>
    * @inheritdoc
    */
   getRegex(): RegExp {
-    return /(\d{2}.\d{2}.4\d{4})\s(.+)\s([0-8][0-9]|90)°\s?([0-5][0-9]|60)'\s?([0-5][0-9].?[0-9]{0,2}|60.00)""?\s(U|S)\s(0\d{2}|1(?:[0-7][0-9]|80))°\s?([0-5][0-9]|60)'\s?([0-5][0-9].?[0-9]{0,2}|60.00)""?\s(B|T)\s*(\D*)/;
+    return /(\d{2}\.\d{2}\.4\d{4})\s(.+)\s([0-8][0-9]|90)°\s?([0-5][0-9]|60)'\s?([0-5][0-9]\.?[0-9]{0,2}|60\.00)""?\s(U|S)\s(0\d{2}|1(?:[0-7][0-9]|80))°\s?([0-5][0-9]|60)'\s?([0-5][0-9]\.?[0-9]{0,2}|60\.00)""?\s(B|T)\s*(\D*)/;
   }
 
   transform(data: string): Island | null {
-    const match = data.match(this.getRegex());
+    const match = regexMatcher(this.getRegex(), data);
 
-    if (!match?.length) {
+    if (!match?.groups.length) {
       return null;
     }
 
-    const [, code, name, ltDeg, ltMin, ltSec, ltPole, lnDeg, lnMin, lnSec, lnPole, desc] = match;
+    const [
+      code, name, ltDeg, ltMin, ltSec, ltPole, lnDeg, lnMin, lnSec, lnPole, desc,
+    ] = match.groups;
     const [provinceCode, regencyCode] = code.split('.');
 
     return {

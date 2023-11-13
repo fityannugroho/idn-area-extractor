@@ -12,14 +12,20 @@ interface TransformerOptions<T> {
   data: string[],
   expected: Required<T>[],
   transformer: Transformer<T>,
+  reDoSTest: string,
 }
 
 function validateTransformer<T>({
-  data, expected, tag, transformer,
+  data, expected, reDoSTest, tag, transformer,
 }: TransformerOptions<T>) {
   describe(`transform() ${tag}`, () => {
     it('should return null if the data does not match', () => {
       const receivedData = transformer.transform('lorem ipsum');
+      expect(receivedData).toBeNull();
+    });
+
+    it('should handle ReDoS attack', () => {
+      const receivedData = transformer.transform(reDoSTest);
       expect(receivedData).toBeNull();
     });
   });
@@ -46,6 +52,7 @@ validateTransformer({
     { code: '11.03', provinceCode: '11', name: 'KABUPATEN ACEH TIMUR' },
     { code: '11.71', provinceCode: '11', name: 'KOTA BANDA ACEH' },
   ],
+  reDoSTest: `KAB\tT${' A'.repeat(1000)}${'00.00 A'.repeat(1000)}\n`,
 });
 
 validateTransformer({
@@ -58,6 +65,7 @@ validateTransformer({
     { code: '11.01.03', regencyCode: '11.01', name: 'Kluet Selatan' },
     { code: '11.01.04', regencyCode: '11.01', name: 'Labuhanhaji' },
   ],
+  reDoSTest: `00.00.00\nh${'0\tqanun b'.repeat(18258)}\n`,
 });
 
 validateTransformer({
@@ -122,6 +130,7 @@ validateTransformer({
       name: 'Pulau Balontohe Besar',
     },
   ],
+  reDoSTest: '98.26.48400\tB'.repeat(15192),
 });
 
 validateTransformer({
@@ -137,4 +146,5 @@ validateTransformer({
     { code: '12.19.11.2003', districtCode: '12.19.11', name: 'Perkebunan Tanah Datar' },
     { code: '13.07.04.2001', districtCode: '13.07.04', name: 'Tj. Haro Sikabu-kabu Pd. Panjang' },
   ],
+  reDoSTest: `00.00.00.0000\n${'\n'.repeat(54773)}`,
 });

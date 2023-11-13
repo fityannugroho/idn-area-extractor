@@ -1,5 +1,6 @@
 import { Village, VillageCsv } from 'idn-area-data';
 import getDividerWords from '~/divider-words.js';
+import { regexMatcher } from '~/helpers.js';
 import { Transformer } from './index.js';
 
 export default class VillageTransformer implements Transformer<Village, VillageCsv> {
@@ -37,7 +38,7 @@ export default class VillageTransformer implements Transformer<Village, VillageC
     for (const row of data) {
       // The current row is most likely the rest of latest village name
       // if the current row length <= column size
-      if (row.match(villageNameRegex) && row.length <= colSize) {
+      if (regexMatcher(villageNameRegex, row) && row.length <= colSize) {
         const lastRow = mergedRows.pop();
 
         if (lastRow) {
@@ -52,13 +53,13 @@ export default class VillageTransformer implements Transformer<Village, VillageC
   }
 
   transform(data: string): Village | null {
-    const match = data.match(this.getRegex());
+    const match = regexMatcher(this.getRegex(), data);
 
-    if (!match?.length) {
+    if (!match?.groups.length) {
       return null;
     }
 
-    const [, code, name] = match;
+    const [code, name] = match.groups;
     const [provinceCode, regencyCode, districtCode] = code.split('.');
 
     return {
