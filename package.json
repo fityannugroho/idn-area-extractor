@@ -43,22 +43,22 @@
   },
   "devDependencies": {
     "@types/node": "^20.5.9",
-    "@types/papaparse": "^5.3.8",
+    "@types/papaparse": "^5.3.11",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
-    "@vitest/coverage-v8": "^0.34.3",
+    "@vitest/coverage-v8": "^0.34.6",
     "eslint": "^8.47.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
     "eslint-plugin-import": "^2.28.1",
     "tsup": "^7.2.0",
     "typescript": "^5.2.2",
-    "vitest": "^0.34.3"
+    "vitest": "^0.34.6"
   },
   "dependencies": {
     "@inquirer/prompts": "^3.0.4",
-    "file-type": "^18.5.0",
-    "idn-area-data": "^3.0.0",
+    "file-type": "^18.7.0",
+    "idn-area-data": "^3.0.1",
     "jest-diff": "^29.6.4",
     "meow": "^12.1.1",
     "multi-integer-range": "^5.2.0",
