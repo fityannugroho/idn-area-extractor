@@ -1,4 +1,4 @@
-import pdfjs from 'pdfjs-dist';
+import * as pdfjs from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { TextItem } from 'pdfjs-dist/types/src/display/api.js';
 
 function isTextItem(item: unknown): item is TextItem {
