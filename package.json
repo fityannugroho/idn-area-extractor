@@ -62,7 +62,7 @@
     "jest-diff": "^29.6.4",
     "meow": "^12.1.1",
     "multi-integer-range": "^5.2.0",
-    "ora": "^7.0.1",
+    "ora": "^8.0.1",
     "papaparse": "^5.4.1",
     "pdfjs-dist": "^4.0.269",
     "super-regex": "^0.3.0"
