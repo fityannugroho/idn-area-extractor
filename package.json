@@ -60,7 +60,7 @@
     "file-type": "^18.7.0",
     "idn-area-data": "^3.0.3",
     "jest-diff": "^29.6.4",
-    "meow": "^12.1.1",
+    "meow": "^13.1.0",
     "multi-integer-range": "^5.2.0",
     "ora": "^8.0.1",
     "papaparse": "^5.4.1",
