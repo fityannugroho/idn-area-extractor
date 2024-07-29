@@ -42,7 +42,7 @@
     "node": ">=18"
   },
   "devDependencies": {
-    "@types/node": "^20.10.3",
+    "@types/node": "^22.0.0",
     "@types/papaparse": "^5.3.14",
     "@typescript-eslint/eslint-plugin": "^6.13.2",
     "@typescript-eslint/parser": "^6.13.2",
