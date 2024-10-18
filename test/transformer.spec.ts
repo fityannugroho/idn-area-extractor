@@ -1,22 +1,26 @@
-import path from 'path';
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { extractTxtFileRows } from '~/extractor.js';
 import DistrictTransformer from '~/transformer/DistrictTransformer.js';
 import IslandTransformer from '~/transformer/IslandTransformer.js';
 import RegencyTransformer from '~/transformer/RegencyTransformer.js';
 import VillageTransformer from '~/transformer/VillageTransformer.js';
-import { Transformer } from '~/transformer/index.js';
+import type { Transformer } from '~/transformer/index.js';
 
 interface TransformerOptions<T> {
-  tag: string,
-  data: string[],
-  expected: Required<T>[],
-  transformer: Transformer<T>,
-  reDoSTest: string,
+  tag: string;
+  data: string[];
+  expected: Required<T>[];
+  transformer: Transformer<T>;
+  reDoSTest: string;
 }
 
 function validateTransformer<T>({
-  data, expected, reDoSTest, tag, transformer,
+  data,
+  expected,
+  reDoSTest,
+  tag,
+  transformer,
 }: TransformerOptions<T>) {
   describe(`transform() ${tag}`, () => {
     it('should return null if the data does not match', () => {
@@ -32,7 +36,10 @@ function validateTransformer<T>({
 
   describe(`transformMany() ${tag}`, () => {
     it('should return an empty array if the data does not match', () => {
-      const receivedData = transformer.transformMany(['lorem ipsum', 'dolor sit amet']);
+      const receivedData = transformer.transformMany([
+        'lorem ipsum',
+        'dolor sit amet',
+      ]);
       expect(receivedData).toHaveLength(0);
     });
 
@@ -141,10 +148,22 @@ validateTransformer({
     { code: '11.01.01.2001', districtCode: '11.01.01', name: 'Keude Bakongan' },
     { code: '11.01.01.2002', districtCode: '11.01.01', name: 'Ujong Mangki' },
     { code: '11.01.01.2015', districtCode: '11.01.01', name: 'Darul Ikhsan' },
-    { code: '11.11.05.2003', districtCode: '11.11.05', name: 'Matang Glumpang Dua Mns. Timu (X)' },
+    {
+      code: '11.11.05.2003',
+      districtCode: '11.11.05',
+      name: 'Matang Glumpang Dua Mns. Timu (X)',
+    },
     { code: '11.14.02.2010', districtCode: '11.14.02', name: 'Datar Luas' },
-    { code: '12.19.11.2003', districtCode: '12.19.11', name: 'Perkebunan Tanah Datar' },
-    { code: '13.07.04.2001', districtCode: '13.07.04', name: 'Tj. Haro Sikabu-kabu Pd. Panjang' },
+    {
+      code: '12.19.11.2003',
+      districtCode: '12.19.11',
+      name: 'Perkebunan Tanah Datar',
+    },
+    {
+      code: '13.07.04.2001',
+      districtCode: '13.07.04',
+      name: 'Tj. Haro Sikabu-kabu Pd. Panjang',
+    },
   ],
   reDoSTest: `00.00.00.0000\n${'\n'.repeat(54773)}`,
 });

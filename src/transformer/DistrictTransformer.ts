@@ -1,9 +1,11 @@
-import { District, DistrictCsv } from 'idn-area-data';
+import type { District, DistrictCsv } from 'idn-area-data';
 import getDividerWords from '~/divider-words.js';
 import { regexMatcher } from '~/helpers.js';
-import { Transformer } from './index.js';
+import type { Transformer } from './index.js';
 
-export default class DistrictTransformer implements Transformer<District, DistrictCsv> {
+export default class DistrictTransformer
+  implements Transformer<District, DistrictCsv>
+{
   /**
    *
    * The regex was tested in https://regex101.com/r/QDaT7Z

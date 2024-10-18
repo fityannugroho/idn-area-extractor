@@ -1,9 +1,9 @@
-import path from 'path';
+import path from 'node:path';
 import { extractTxtFileRows } from './extractor.js';
 
 interface DividerWordsOptions {
-  withTypos?: boolean
-  excludedWords?: readonly string[]
+  withTypos?: boolean;
+  excludedWords?: readonly string[];
 }
 
 export default function getDividerWords(options?: DividerWordsOptions) {

@@ -1,8 +1,10 @@
-import { Island, IslandCsv } from 'idn-area-data';
+import type { Island, IslandCsv } from 'idn-area-data';
 import { regexMatcher } from '~/helpers.js';
-import { Transformer } from './index.js';
+import type { Transformer } from './index.js';
 
-export default class IslandTransformer implements Transformer<Island, IslandCsv> {
+export default class IslandTransformer
+  implements Transformer<Island, IslandCsv>
+{
   /**
    *
    * The regex was tested in https://regex101.com/r/9A8GK2
@@ -20,7 +22,17 @@ export default class IslandTransformer implements Transformer<Island, IslandCsv>
     }
 
     const [
-      code, name, ltDeg, ltMin, ltSec, ltPole, lnDeg, lnMin, lnSec, lnPole, desc,
+      code,
+      name,
+      ltDeg,
+      ltMin,
+      ltSec,
+      ltPole,
+      lnDeg,
+      lnMin,
+      lnSec,
+      lnPole,
+      desc,
     ] = match.groups;
     const [provinceCode, regencyCode] = code.split('.');
 
@@ -28,14 +40,11 @@ export default class IslandTransformer implements Transformer<Island, IslandCsv>
       code,
       regencyCode: regencyCode === '00' ? '' : `${provinceCode}.${regencyCode}`,
       name,
-      coordinate: `${ltDeg}°${
-        ltMin}'${
-        ltSec.includes('.') ? ltSec : `${ltSec}.00`}" ${
-        ltPole.replace('U', 'N')} ${
-        lnDeg}°${
-        lnMin}'${
-        lnSec.includes('.') ? lnSec : `${lnSec}.00`}" ${
-        lnPole.replace('T', 'E').replace('B', 'W')}`,
+      coordinate: `${ltDeg}°${ltMin}'${
+        ltSec.includes('.') ? ltSec : `${ltSec}.00`
+      }" ${ltPole.replace('U', 'N')} ${lnDeg}°${lnMin}'${
+        lnSec.includes('.') ? lnSec : `${lnSec}.00`
+      }" ${lnPole.replace('T', 'E').replace('B', 'W')}`,
       isPopulated: desc.search(/\bBP\b/) !== -1,
       isOutermostSmall: desc.search(/\bPPKT\b/) !== -1,
     };

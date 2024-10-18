@@ -1,25 +1,35 @@
-import { fileTypeFromFile } from 'file-type';
-import {
-  getDistricts, getIslands, getRegencies, getVillages,
-} from 'idn-area-data';
-import { diff } from 'jest-diff';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileTypeFromFile } from 'file-type';
+import {
+  getDistricts,
+  getIslands,
+  getRegencies,
+  getVillages,
+} from 'idn-area-data';
+import { diff } from 'jest-diff';
 import ora from 'ora';
 import Papa from 'papaparse';
 import DirectoryError from './errors/DirectoryError.js';
 import ValidationError from './errors/ValidationError.js';
-import { extractFromPdf, extractRows, extractTxtFileRows } from './extractor.js';
+import {
+  extractFromPdf,
+  extractRows,
+  extractTxtFileRows,
+} from './extractor.js';
 import { regexMatcher } from './helpers.js';
 import DistrictTransformer from './transformer/DistrictTransformer.js';
 import IslandTransformer from './transformer/IslandTransformer.js';
 import RegencyTransformer from './transformer/RegencyTransformer.js';
 import VillageTransformer from './transformer/VillageTransformer.js';
-import { Transformer } from './transformer/index.js';
+import type { Transformer } from './transformer/index.js';
 
 export type DataEntity = 'regencies' | 'districts' | 'islands' | 'villages';
 export const dataEntities: readonly DataEntity[] = [
-  'regencies', 'districts', 'islands', 'villages',
+  'regencies',
+  'districts',
+  'islands',
+  'villages',
 ];
 
 export async function isFilePdf(fpath: string) {
@@ -29,67 +39,80 @@ export async function isFilePdf(fpath: string) {
 
 async function isFileTxt(fpath: string) {
   const fileType = await fileTypeFromFile(fpath);
-  return typeof fileType === 'undefined' && fpath.toLowerCase().endsWith('.txt');
+  return (
+    typeof fileType === 'undefined' && fpath.toLowerCase().endsWith('.txt')
+  );
 }
 
 export interface ExtractorOptions {
   /**
    * Compare the extracted data with the latest data.
    */
-  compare?: boolean
+  compare?: boolean;
 
   /**
    * Which kind of data should be extracted.
    */
-  data: DataEntity
+  data: DataEntity;
 
   /**
    * The folder destination.
    *
    * The default is the current working directory.
    */
-  destination?: string
+  destination?: string;
 
   /**
    * Set a specific output file name without a file extension.
    *
    * The output file will have .csv extension.
    */
-  output?: string
+  output?: string;
 
   /**
    * The path to the PDF or TXT file.
    */
-  filePath: string
+  filePath: string;
 
   /**
    * The specific PDF page range to be extracted.
    *
    * @example `1-2,5,7-9`.
    */
-  range?: string
+  range?: string;
 
   /**
    * Save the extracted raw data into .txt file (only works with PDF data).
    */
-  saveRaw?: boolean
+  saveRaw?: boolean;
 
   /**
    * Disable all logs.
    */
-  silent?: boolean
+  silent?: boolean;
 }
 
 /**
  * @throws {ValidationError} If there are any invalid options.
  */
-async function validateOptions(options: ExtractorOptions): Promise<ExtractorOptions> {
+async function validateOptions(
+  options: ExtractorOptions,
+): Promise<ExtractorOptions> {
   const {
-    compare, data, destination, filePath, output, range, saveRaw, silent,
+    compare,
+    data,
+    destination,
+    filePath,
+    output,
+    range,
+    saveRaw,
+    silent,
   } = options;
 
   if (!dataEntities.includes(data)) {
-    throw new ValidationError(`'data' must be one of ${dataEntities.join(', ')}`);
+    throw new ValidationError(
+      `'data' must be one of ${dataEntities.join(', ')}`,
+    );
   }
 
   if (!filePath.trim()) {
@@ -102,7 +125,7 @@ async function validateOptions(options: ExtractorOptions): Promise<ExtractorOpti
 
   const isPdf = await isFilePdf(filePath);
 
-  if (!(isPdf || await isFileTxt(filePath))) {
+  if (!(isPdf || (await isFileTxt(filePath)))) {
     throw new ValidationError("'filePath' must be a PDF or TXT path");
   }
 
@@ -162,7 +185,14 @@ async function validateOptions(options: ExtractorOptions): Promise<ExtractorOpti
 
 export default async function idnxtr(options: ExtractorOptions) {
   const {
-    compare, data, destination = process.cwd(), filePath, output, range, saveRaw, silent,
+    compare,
+    data,
+    destination = process.cwd(),
+    filePath,
+    output,
+    range,
+    saveRaw,
+    silent,
   } = await validateOptions(options);
 
   // Create the directory if it doesn't exist.
@@ -173,7 +203,9 @@ export default async function idnxtr(options: ExtractorOptions) {
       if (error instanceof Error) {
         throw new DirectoryError(error.message);
       }
-      throw new DirectoryError(`Failed to create '${destination}' directory path`);
+      throw new DirectoryError(
+        `Failed to create '${destination}' directory path`,
+      );
     }
   }
 
@@ -183,8 +215,14 @@ export default async function idnxtr(options: ExtractorOptions) {
   let rows: string[] = [];
 
   if (await isFilePdf(filePath)) {
-    const { pageContents, numPages, pagesExtracted } = await extractFromPdf(filePath, range);
-    rows = extractRows(pageContents.join('\n'), { trim: true, removeEmpty: true });
+    const { pageContents, numPages, pagesExtracted } = await extractFromPdf(
+      filePath,
+      range,
+    );
+    rows = extractRows(pageContents.join('\n'), {
+      trim: true,
+      removeEmpty: true,
+    });
 
     if (saveRaw) {
       fs.writeFileSync(
@@ -193,7 +231,9 @@ export default async function idnxtr(options: ExtractorOptions) {
       );
     }
 
-    spinner.succeed(`${pagesExtracted}/${numPages} pages extracted (${rows.length} rows)`);
+    spinner.succeed(
+      `${pagesExtracted}/${numPages} pages extracted (${rows.length} rows)`,
+    );
   } else {
     rows = extractTxtFileRows(filePath, { trim: true, removeEmpty: true });
     spinner.succeed(`${rows.length} rows found`);
@@ -224,7 +264,10 @@ export default async function idnxtr(options: ExtractorOptions) {
   spinner.start('Transforming data');
 
   const results = transformer.transformMany(rows);
-  const resultsCsv = Papa.unparse(transformer.transformForCsv(results), unparseOptions);
+  const resultsCsv = Papa.unparse(
+    transformer.transformForCsv(results),
+    unparseOptions,
+  );
   fs.writeFileSync(
     path.resolve(destination, `${output ?? data}.csv`),
     resultsCsv,

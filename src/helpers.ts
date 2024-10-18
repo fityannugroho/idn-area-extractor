@@ -12,10 +12,8 @@ export const DEFAULT_REGEX_MATCHER_TIMEOUT = 500;
  *
  * The default timeout is 500ms.
  */
-export function regexMatcher(
-  regex: RegExp,
-  str: string,
-  timeout?: number,
-) {
-  return firstMatch(regex, str, { timeout: timeout ?? DEFAULT_REGEX_MATCHER_TIMEOUT });
+export function regexMatcher(regex: RegExp, str: string, timeout?: number) {
+  return firstMatch(regex, str, {
+    timeout: timeout ?? DEFAULT_REGEX_MATCHER_TIMEOUT,
+  });
 }

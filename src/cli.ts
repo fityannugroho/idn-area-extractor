@@ -1,10 +1,11 @@
 #!/usr/bin/env node
+import { existsSync, lstatSync } from 'node:fs';
 import { confirm, input, select } from '@inquirer/prompts';
-import { existsSync, lstatSync } from 'fs';
 import meow from 'meow';
-import idnxtr, { DataEntity, dataEntities, isFilePdf } from './index.js';
+import idnxtr, { type DataEntity, dataEntities, isFilePdf } from './index.js';
 
-const cli = meow(`
+const cli = meow(
+  `
   USAGE
     $ idnxtr [regencies|districts|islands|villages] </path/to/file.[pdf|txt]> [OPTIONS]
 
@@ -22,36 +23,38 @@ const cli = meow(`
     $ idnxtr regencies ~/data/regencies.pdf -r 1-2,5,7-10 -R
     $ idnxtr regencies ~/data/regencies.pdf --range 1-2,5,7-10 --save-raw
     $ idnxtr regencies ~/data/raw-regencies.txt
-`, {
-  importMeta: import.meta,
-  description: 'Extract Indonesia area data from PDF',
-  booleanDefault: undefined,
-  flags: {
-    compare: {
-      shortFlag: 'c',
-      type: 'boolean',
-    },
-    destination: {
-      shortFlag: 'd',
-      type: 'string',
-    },
-    output: {
-      shortFlag: 'o',
-      type: 'string',
-    },
-    range: {
-      shortFlag: 'r',
-      type: 'string',
-    },
-    saveRaw: {
-      shortFlag: 'R',
-      type: 'boolean',
-    },
-    silent: {
-      type: 'boolean',
+`,
+  {
+    importMeta: import.meta,
+    description: 'Extract Indonesia area data from PDF',
+    booleanDefault: undefined,
+    flags: {
+      compare: {
+        shortFlag: 'c',
+        type: 'boolean',
+      },
+      destination: {
+        shortFlag: 'd',
+        type: 'string',
+      },
+      output: {
+        shortFlag: 'o',
+        type: 'string',
+      },
+      range: {
+        shortFlag: 'r',
+        type: 'string',
+      },
+      saveRaw: {
+        shortFlag: 'R',
+        type: 'boolean',
+      },
+      silent: {
+        type: 'boolean',
+      },
     },
   },
-});
+);
 
 async function main() {
   let [data, filePath] = cli.input;
