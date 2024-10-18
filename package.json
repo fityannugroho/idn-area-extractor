@@ -8,13 +8,10 @@
   "bin": {
     "idnxtr": "lib/cli.js"
   },
-  "files": [
-    "lib",
-    "data"
-  ],
+  "files": ["lib", "data"],
   "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
@@ -25,13 +22,7 @@
     "type": "git",
     "url": "git+https://github.com/fityannugroho/idn-area-extractor.git"
   },
-  "keywords": [
-    "extractor",
-    "csv",
-    "idn-area",
-    "indonesia",
-    "wilayah"
-  ],
+  "keywords": ["extractor", "csv", "idn-area", "indonesia", "wilayah"],
   "author": "fityan <fityannugroho@gmail.com> (https://github.com/fityannugroho)",
   "license": "MIT",
   "bugs": {
@@ -42,6 +33,7 @@
     "node": ">=18"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@types/node": "^22.7.6",
     "@types/papaparse": "^5.3.14",
     "@typescript-eslint/eslint-plugin": "^6.13.2",
