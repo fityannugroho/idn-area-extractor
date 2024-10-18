@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "include": ["src", "test", "data"]
+    "ignore": ["node_modules", "dist", "coverage", "lib", "logs", "media"]
   },
   "formatter": {
     "enabled": true,
