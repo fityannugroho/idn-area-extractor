@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 import { describe, expect, test } from 'vitest';
 import { extractFromPdf, extractTxtFileRows } from '~/extractor.js';
 
@@ -35,20 +35,25 @@ describe('extractFromPdf', () => {
   });
 
   test('with invalid range', async () => {
-    await expect(extractFromPdf(filePath, '3'))
-      .rejects.toThrow('Page range exceeds the expected range');
+    await expect(extractFromPdf(filePath, '3')).rejects.toThrow(
+      'Page range exceeds the expected range',
+    );
 
-    await expect(extractFromPdf(filePath, '0-1'))
-      .rejects.toThrow('Page range exceeds the expected range');
+    await expect(extractFromPdf(filePath, '0-1')).rejects.toThrow(
+      'Page range exceeds the expected range',
+    );
 
-    await expect(extractFromPdf(filePath, '1-'))
-      .rejects.toThrow('Unexpected unbouded range notation');
+    await expect(extractFromPdf(filePath, '1-')).rejects.toThrow(
+      'Unexpected unbouded range notation',
+    );
 
-    await expect(extractFromPdf(filePath, '-1'))
-      .rejects.toThrow('Unexpected unbouded range notation');
+    await expect(extractFromPdf(filePath, '-1')).rejects.toThrow(
+      'Unexpected unbouded range notation',
+    );
 
-    await expect(extractFromPdf(filePath, 'abc'))
-      .rejects.toThrow('Invalid input');
+    await expect(extractFromPdf(filePath, 'abc')).rejects.toThrow(
+      'Invalid input',
+    );
   });
 });
 
@@ -59,9 +64,7 @@ describe('extractTxtFileRows', () => {
     const rows = extractTxtFileRows(filePath);
 
     expect(rows).toHaveLength(12);
-    expect(rows).toEqual(
-      expect.arrayContaining([expect.any(String)]),
-    );
+    expect(rows).toEqual(expect.arrayContaining([expect.any(String)]));
   });
 
   test('with trim option', () => {
@@ -74,8 +77,6 @@ describe('extractTxtFileRows', () => {
     const rows = extractTxtFileRows(filePath, { removeEmpty: true });
 
     expect(rows).toHaveLength(8);
-    expect(rows).toEqual(
-      expect.arrayContaining([expect.any(String)]),
-    );
+    expect(rows).toEqual(expect.arrayContaining([expect.any(String)]));
   });
 });

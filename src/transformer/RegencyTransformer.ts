@@ -1,8 +1,10 @@
-import { Regency, RegencyCsv } from 'idn-area-data';
+import type { Regency, RegencyCsv } from 'idn-area-data';
 import { regexMatcher } from '~/helpers.js';
-import { Transformer } from './index.js';
+import type { Transformer } from './index.js';
 
-export default class RegencyTransformer implements Transformer<Regency, RegencyCsv> {
+export default class RegencyTransformer
+  implements Transformer<Regency, RegencyCsv>
+{
   /**
    *
    * The regex was tested in https://regex101.com/r/J63CVl

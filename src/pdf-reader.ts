@@ -1,5 +1,5 @@
 import * as pdfjs from 'pdfjs-dist/legacy/build/pdf.mjs';
-import { TextItem } from 'pdfjs-dist/types/src/display/api.js';
+import type { TextItem } from 'pdfjs-dist/types/src/display/api.js';
 
 function isTextItem(item: unknown): item is TextItem {
   return typeof (item as TextItem).str === 'string';
@@ -41,7 +41,7 @@ export default class PdfReader {
     const contentItems = await this.getPageContent(pageNumber);
     const res: string[] = [];
 
-    contentItems.forEach((item) => {
+    for (const item of contentItems) {
       if (isTextItem(item)) {
         if (item.hasEOL) {
           res.push(item.str, '\n');
@@ -49,7 +49,7 @@ export default class PdfReader {
           res.push(item.str);
         }
       }
-    });
+    }
 
     return res.join('');
   }

@@ -1,14 +1,14 @@
-import path from 'path';
-import {
-  beforeEach, describe, expect, it,
-} from 'vitest';
+import path from 'node:path';
+import { beforeEach, describe, expect, it } from 'vitest';
 import PdfReader from '~/pdf-reader.js';
 
 describe('PdfReader', () => {
   let pdfReader: PdfReader;
 
   beforeEach(() => {
-    pdfReader = new PdfReader(path.resolve(__dirname, './data/REF-2022-2_regencies-11.pdf'));
+    pdfReader = new PdfReader(
+      path.resolve(__dirname, './data/REF-2022-2_regencies-11.pdf'),
+    );
   });
 
   describe('getNumPages', () => {
@@ -24,7 +24,9 @@ describe('PdfReader', () => {
 
   describe('getPageContent', () => {
     it('should throw error if load() not called', async () => {
-      await expect(pdfReader.getPageContent()).rejects.toThrow('PDF not loaded');
+      await expect(pdfReader.getPageContent()).rejects.toThrow(
+        'PDF not loaded',
+      );
     });
 
     it('should return page content', async () => {
@@ -43,7 +45,9 @@ describe('PdfReader', () => {
 
   describe('getPageContentString', () => {
     it('should throw error if load() not called', async () => {
-      await expect(pdfReader.getPageContentString()).rejects.toThrow('PDF not loaded');
+      await expect(pdfReader.getPageContentString()).rejects.toThrow(
+        'PDF not loaded',
+      );
     });
 
     it('should return page content', async () => {

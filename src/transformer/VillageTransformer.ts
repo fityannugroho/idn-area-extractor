@@ -1,15 +1,15 @@
-import { Village, VillageCsv } from 'idn-area-data';
+import type { Village, VillageCsv } from 'idn-area-data';
 import getDividerWords from '~/divider-words.js';
 import { regexMatcher } from '~/helpers.js';
-import { Transformer } from './index.js';
+import type { Transformer } from './index.js';
 
-export default class VillageTransformer implements Transformer<Village, VillageCsv> {
+export default class VillageTransformer
+  implements Transformer<Village, VillageCsv>
+{
   getDividerWords() {
     return getDividerWords({
       withTypos: true,
-      excludedWords: [
-        'data', 'desa', 'PP', 'pindah', 'undang',
-      ],
+      excludedWords: ['data', 'desa', 'PP', 'pindah', 'undang'],
     });
   }
 
@@ -30,7 +30,10 @@ export default class VillageTransformer implements Transformer<Village, VillageC
   prepareData(data: string[]) {
     // The regex was tested in https://regex101.com/r/FfdNRZ/8
     const dws = this.getDividerWords().join('|');
-    const villageNameRegex = new RegExp(`^(?!(?:${dws})\\b)([a-z.'()/\\- ]+?)$`, 'i');
+    const villageNameRegex = new RegExp(
+      `^(?!(?:${dws})\\b)([a-z.'()/\\- ]+?)$`,
+      'i',
+    );
     const mergedRows: string[] = [];
     const colSize = 26;
 

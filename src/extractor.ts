@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 import * as mr from 'multi-integer-range';
 import PdfReader from './pdf-reader.js';
 
@@ -50,11 +50,11 @@ interface ExtractRowsOptions {
   /**
    * Remove whitespaces at the beginning and the end of each row.
    */
-  trim?: boolean,
+  trim?: boolean;
   /**
    * Remove empty rows.
    */
-  removeEmpty?: boolean,
+  removeEmpty?: boolean;
 }
 
 /**
@@ -77,6 +77,9 @@ export function extractRows(data: string, options?: ExtractRowsOptions) {
 /**
  * Extract rows in a text file (.txt or .csv).
  */
-export function extractTxtFileRows(filePath: string, options?: ExtractRowsOptions) {
+export function extractTxtFileRows(
+  filePath: string,
+  options?: ExtractRowsOptions,
+) {
   return extractRows(readFileSync(filePath, { encoding: 'utf8' }), options);
 }
