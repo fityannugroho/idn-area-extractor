@@ -42,7 +42,7 @@
     "vitest": "^1.0.1"
   },
   "dependencies": {
-    "@inquirer/prompts": "^5.0.1",
+    "@inquirer/prompts": "^7.1.0",
     "file-type": "^19.6.0",
     "idn-area-data": "^3.1.1",
     "jest-diff": "^29.7.0",
