@@ -4,8 +4,8 @@ import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { extractTxtFileRows } from '~/extractor.js';
 import idnxtr, {
   type DataEntity,
-  type ExtractorOptions,
   dataEntities,
+  type ExtractorOptions,
 } from '~/index.js';
 
 describe('idnxtr', () => {

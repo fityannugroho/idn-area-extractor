@@ -3,9 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { extractTxtFileRows } from '~/extractor.js';
 import DistrictTransformer from '~/transformer/DistrictTransformer.js';
 import IslandTransformer from '~/transformer/IslandTransformer.js';
+import type { Transformer } from '~/transformer/index.js';
 import RegencyTransformer from '~/transformer/RegencyTransformer.js';
 import VillageTransformer from '~/transformer/VillageTransformer.js';
-import type { Transformer } from '~/transformer/index.js';
 
 interface TransformerOptions<T> {
   tag: string;

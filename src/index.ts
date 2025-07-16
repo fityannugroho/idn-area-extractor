@@ -20,9 +20,9 @@ import {
 import { regexMatcher } from './helpers.js';
 import DistrictTransformer from './transformer/DistrictTransformer.js';
 import IslandTransformer from './transformer/IslandTransformer.js';
+import type { Transformer } from './transformer/index.js';
 import RegencyTransformer from './transformer/RegencyTransformer.js';
 import VillageTransformer from './transformer/VillageTransformer.js';
-import type { Transformer } from './transformer/index.js';
 
 export type DataEntity = 'regencies' | 'districts' | 'islands' | 'villages';
 export const dataEntities: readonly DataEntity[] = [
