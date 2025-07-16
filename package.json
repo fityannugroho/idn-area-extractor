@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/fityannugroho/idn-area-extractor#readme",
   "engines": {
-    "node": ">=18"
+    "node": ">=20.19"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
