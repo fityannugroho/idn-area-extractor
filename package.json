@@ -35,21 +35,21 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@types/node": "^22.13.9",
-    "@types/papaparse": "^5.3.15",
-    "@vitest/coverage-v8": "^3.0.7",
-    "tsup": "^8.4.0",
-    "typescript": "^5.8.2",
-    "vitest": "^3.0.7"
+    "@types/papaparse": "^5.3.16",
+    "@vitest/coverage-v8": "^3.2.4",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
-    "@inquirer/prompts": "^7.3.2",
+    "@inquirer/prompts": "^7.6.0",
     "file-type": "^20.4.0",
-    "idn-area-data": "^3.1.1",
+    "idn-area-data": "^3.1.2",
     "jest-diff": "^29.7.0",
     "meow": "^13.2.0",
     "multi-integer-range": "^5.2.0",
     "ora": "^8.2.0",
-    "papaparse": "^5.5.2",
+    "papaparse": "^5.5.3",
     "pdfjs-dist": "^4.7.76",
     "super-regex": "^1.0.0"
   }
